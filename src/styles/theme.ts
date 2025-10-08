@@ -16,32 +16,18 @@ export const theme = {
   colors: {
     gray,
     // 시맨틱 색상 (의미 기반 컬러 토큰)
-    default: {
-      background: '#fafcfe',
-      white: gray[0],
-      blue: '#287eec',
-    },
-    customer: {
-      background: '#fafcfe',
-      main: '#da2127',
-      disabled: '#F4BFC1',
-      dark: '#9C171C',
-    },
-    owner: {
-      background: '#fafcfe',
-      main: '#34495e',
-      disabled: '#c5cbd1',
-      dark: '#1d2935',
-    },
+    background: '#FDFDFD',
+    primary: '#DA2127',
+    // 유저 태그 색상
     tag: {
-      star: '#f1f436',
-      COMPLIMENT: '#e5ffd4',
-      SUGGESTION: '#dbe9fe',
-      COMPLAINT: '#ffdcda',
+      purple: '#9790C3',
+      blue: '#72ACB4',
+      gold: '#B6B087',
     },
-    feedback: {
-      UNREAD: '#FFF7ED',
-      DONE: '#EEF7FF',
+    // 채팅의 말풍선 색상
+    chat: {
+      user: '#8DBFC6',
+      other: '#EDF4F5',
     },
     // 텍스트 색상
     text: {
@@ -58,19 +44,15 @@ export const theme = {
       fontSize: '1.5rem', // 24px
       lineHeight: '2rem', // 32px
     },
-    title2: {
-      fontSize: '1.25rem', // 20px
-      lineHeight: '1.6875rem', // 27px
-    },
 
     // 부제목
     subtitle1: {
-      fontSize: '1.125rem', // 18px
-      lineHeight: '1.5rem', // 24px
+      fontSize: '1.25rem', // 20px
+      lineHeight: '1.6875rem', // 27px
     },
     subtitle2: {
-      fontSize: '1rem', // 16px
-      lineHeight: '1.375rem', // 22px
+      fontSize: '1.125rem', // 18px
+      lineHeight: '1.5rem', // 24px
     },
 
     // 본문
@@ -86,6 +68,7 @@ export const theme = {
     fontWeight: {
       regular: 400,
       medium: 500,
+      semibold: 600,
       bold: 700,
     },
   },
