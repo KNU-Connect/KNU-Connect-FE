@@ -1,7 +1,7 @@
 import { AppLayout } from '@/components';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ROUTES } from './paths';
-import { HomePage } from '@/pages';
+import { ChatPage, HomePage, MentorPage, MyPage } from '@/pages';
 
 /**
  * 애플리케이션 라우터 설정
@@ -16,6 +16,18 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <HomePage />,
+      },
+      {
+        path: ROUTES.CHAT,
+        element: <ChatPage />,
+      },
+      {
+        path: ROUTES.MENTOR,
+        element: <MentorPage />,
+      },
+      {
+        path: ROUTES.MY,
+        element: <MyPage />,
       },
     ],
   },
