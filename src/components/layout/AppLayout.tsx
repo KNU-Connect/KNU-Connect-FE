@@ -1,11 +1,26 @@
 import styled from '@emotion/styled';
 import { Outlet } from 'react-router-dom';
+import { TheHeader, type HeaderType } from './TheHeader';
+import { APP_WIDTH } from '@/constants';
+import { TheNav, type NavType } from './TheNav';
 
-export const AppLayout = () => {
+type AppLayoutProps = {
+  headerType?: HeaderType;
+  navType?: NavType;
+};
+
+export const AppLayout = ({
+  headerType = 'default',
+  navType = 'default',
+}: AppLayoutProps) => {
   return (
     <Background>
       <Container>
-        <Outlet />
+        {headerType === 'default' && <TheHeader />}
+        <Main>
+          <Outlet />
+        </Main>
+        {navType === 'default' && <TheNav />}
       </Container>
     </Background>
   );
@@ -17,8 +32,15 @@ const Background = styled.div`
 `;
 
 const Container = styled.div`
-  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  max-width: ${APP_WIDTH}px;
   min-height: 100dvh;
   margin: 0 auto;
   padding: 0;
+  background: ${({ theme }) => theme.colors.background};
+`;
+
+const Main = styled.main`
+  flex: 1;
 `;
