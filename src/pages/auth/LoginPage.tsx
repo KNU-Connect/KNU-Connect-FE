@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
-import { TextField } from '@/components/common/TextField';
-import { MainButton } from '@/components/common/MainButton';
+import { useNavigate } from 'react-router-dom';
+import { TextField, MainButton } from '@/components/common';
+import { ROUTES } from '@/routes/paths';
 import bgImage from '@/assets/knu-building.jpg';
 
 const LoginPageContainer = styled.div`
@@ -68,12 +69,19 @@ const LoginForm = styled.form`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing[4]};
+  margin-bottom: ${({ theme }) => theme.spacing[3]};
 `;
 
 export default function LoginPage() {
+  const navigate = useNavigate();
+
   const handleLoginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // TODO: react-hook-form + tanstack query로 로그인 API 연동
+  };
+
+  const handleSignUpClick = () => {
+    navigate(ROUTES.SIGNUP);
   };
 
   return (
@@ -104,6 +112,10 @@ export default function LoginPage() {
 
             <MainButton type='submit'>로그인</MainButton>
           </LoginForm>
+
+          <MainButton type='button' onClick={handleSignUpClick}>
+            회원가입
+          </MainButton>
         </LoginFormContainer>
       </LoginContent>
     </LoginPageContainer>
