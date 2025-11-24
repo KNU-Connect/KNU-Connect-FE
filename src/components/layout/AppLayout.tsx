@@ -29,6 +29,7 @@ export const AppLayout = ({
 const Background = styled.div`
   width: 100%;
   min-height: 100dvh;
+  background: #c8d5d8;
 `;
 
 const Container = styled.div`
