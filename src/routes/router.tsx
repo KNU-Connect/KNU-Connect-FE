@@ -1,14 +1,19 @@
 import { AppLayout } from '@/components';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ROUTES } from './paths';
-import { ChatPage, HomePage, MentorPage, MyPage } from '@/pages';
+import { ChatPage, HomePage, LoginPage, MentorPage, MyPage } from '@/pages';
 
 /**
  * 애플리케이션 라우터 설정
  * - 각 페이지별로 다른 레이아웃 타입 적용
+ * - 로그인 페이지는 레이아웃 없이 표시
  * - 404 페이지는 레이아웃 없이 표시
  */
 const router = createBrowserRouter([
+  {
+    path: ROUTES.LOGIN,
+    element: <LoginPage />,
+  },
   {
     path: ROUTES.HOME,
     element: <AppLayout />,
