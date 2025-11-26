@@ -65,6 +65,7 @@ const JoinButton = styled.button`
   cursor: pointer;
   transition: opacity 0.2s;
   text-align: center;
+  box-sizing: border-box;
 
   &:hover {
     opacity: 0.9;
