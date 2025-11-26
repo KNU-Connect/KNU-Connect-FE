@@ -26,7 +26,7 @@ const Button = styled.button`
   padding: ${({ theme }) => theme.spacing[4]};
   background-color: ${({ theme }) => theme.colors.gray[20]};
   border: none;
-  border-radius: ${({ theme }) => theme.spacing[3]};
+  border-radius: ${({ theme }) => theme.spacing[4]};
   cursor: pointer;
   transition: background-color 0.2s;
   box-sizing: border-box;

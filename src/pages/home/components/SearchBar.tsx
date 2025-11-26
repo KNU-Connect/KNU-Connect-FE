@@ -17,7 +17,6 @@ const Container = styled.div`
   width: 100%;
   max-width: 100%;
   padding: 0 ${({ theme }) => theme.spacing[6]};
-  box-sizing: border-box;
 `;
 
 const Input = styled.input`
@@ -25,7 +24,7 @@ const Input = styled.input`
   padding: ${({ theme }) =>
     `${theme.spacing[3]} ${theme.spacing[10]} ${theme.spacing[3]} ${theme.spacing[4]}`};
   border: 1px solid ${({ theme }) => theme.colors.gray[40]};
-  border-radius: ${({ theme }) => theme.spacing[3]};
+  border-radius: ${({ theme }) => theme.spacing[4]};
   font-size: ${({ theme }) => theme.typography.body1.fontSize};
   line-height: ${({ theme }) => theme.typography.body1.lineHeight};
   color: ${({ theme }) => theme.colors.text.default};
@@ -47,7 +46,4 @@ const Icon = styled.div`
   top: 50%;
   transform: translateY(-50%);
   color: ${({ theme }) => theme.colors.text.sub};
-  display: flex;
-  align-items: center;
-  pointer-events: none;
 `;
