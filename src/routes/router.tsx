@@ -1,7 +1,13 @@
 import { AppLayout } from '@/components';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ROUTES } from './paths';
-import { ChatPage, HomePage, MentorPage, MyPage } from '@/pages';
+import {
+  ChatPage,
+  HomePage,
+  MentorPage,
+  MyPage,
+  NetworkingDetailPage,
+} from '@/pages';
 
 /**
  * 애플리케이션 라우터 설정
@@ -28,6 +34,10 @@ const router = createBrowserRouter([
       {
         path: ROUTES.MY,
         element: <MyPage />,
+      },
+      {
+        path: ROUTES.NETWORKING_DETAIL,
+        element: <NetworkingDetailPage />,
       },
     ],
   },
