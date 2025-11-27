@@ -8,12 +8,16 @@ export const useSignUpStep2 = (
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     watch,
     setValue,
   } = useFormContext<SignUpSchemaType>();
 
   const isMentor = watch('isMentor');
+  const status = watch('status');
+  const career = watch('career');
+  const interest = watch('interest');
+  const mbti = watch('mbti');
 
   const handleStep2Submit = (data: SignUpSchemaType) => {
     onSubmitFinal(data);
@@ -23,15 +27,17 @@ export const useSignUpStep2 = (
     setValue('isMentor', value, { shouldValidate: true });
   };
 
+  const isSignUpDisabled = !status || !career || !interest || !mbti;
+
   return {
     register,
     handleSubmit,
     errors,
-    isSubmitting,
     isMentor,
     handleStep2Submit,
     handleMentorToggle,
     watch,
+    isSignUpDisabled,
     onPrev,
   };
 };
