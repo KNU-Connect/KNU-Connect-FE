@@ -1,11 +1,18 @@
 import styled from '@emotion/styled';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { mockChatDetails } from '@/data/mockChat';
-import { ChatDetailHeader, MessageList, ChatInput } from './components';
+import {
+  ChatDetailHeader,
+  MessageList,
+  ChatInput,
+  BottomSheet,
+} from './components';
 
 const ChatDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const chatDetail = id ? mockChatDetails[Number(id)] : undefined;
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
   if (!chatDetail) {
     return (
@@ -15,11 +22,27 @@ const ChatDetailPage = () => {
     );
   }
 
+  const handleNetworkPostClick = () => {
+    // TODO: 네트워킹 글 생성 페이지로 이동
+    setIsBottomSheetOpen(false);
+  };
+
   return (
     <Container>
       <ChatDetailHeader name={chatDetail.participant.name} />
-      <MessageList messages={chatDetail.messages} currentUserId='currentUser' />
-      <ChatInput />
+      <MessageList
+        messages={chatDetail.messages}
+        currentUserId='currentUser'
+        isBottomSheetOpen={isBottomSheetOpen}
+      />
+      <ChatInput
+        isBottomSheetOpen={isBottomSheetOpen}
+        onPlusClick={() => setIsBottomSheetOpen(!isBottomSheetOpen)}
+      />
+      <BottomSheet
+        isOpen={isBottomSheetOpen}
+        onNetworkPostClick={handleNetworkPostClick}
+      />
     </Container>
   );
 };

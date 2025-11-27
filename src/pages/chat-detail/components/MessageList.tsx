@@ -6,14 +6,19 @@ import { formatTime } from '../../chat/utils/formatTime';
 type MessageListProps = {
   messages: ChatMessage[];
   currentUserId: string;
+  isBottomSheetOpen?: boolean;
 };
 
-export const MessageList = ({ messages, currentUserId }: MessageListProps) => {
+export const MessageList = ({
+  messages,
+  currentUserId,
+  isBottomSheetOpen = false,
+}: MessageListProps) => {
   let lastDate: string | undefined;
   let lastSenderId: string | undefined;
 
   return (
-    <Container>
+    <Container $isBottomSheetOpen={isBottomSheetOpen}>
       {messages.map((message, index) => {
         const isCurrentUser = message.senderId === currentUserId;
         const showDate = message.date && message.date !== lastDate;
@@ -43,11 +48,13 @@ export const MessageList = ({ messages, currentUserId }: MessageListProps) => {
   );
 };
 
-const Container = styled.div`
+const Container = styled.div<{ $isBottomSheetOpen: boolean }>`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing[2]};
   padding: ${({ theme }) => theme.spacing[4]};
+  padding-bottom: ${({ $isBottomSheetOpen }) =>
+    $isBottomSheetOpen ? 'calc(40vh + 64px)' : '64px'};
   flex: 1;
   overflow-y: auto;
 `;

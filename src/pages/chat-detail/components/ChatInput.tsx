@@ -1,8 +1,16 @@
 import styled from '@emotion/styled';
-import { Plus, Send } from 'lucide-react';
+import { Plus, X, Send } from 'lucide-react';
 import { useState } from 'react';
 
-export const ChatInput = () => {
+type ChatInputProps = {
+  isBottomSheetOpen: boolean;
+  onPlusClick: () => void;
+};
+
+export const ChatInput = ({
+  isBottomSheetOpen,
+  onPlusClick,
+}: ChatInputProps) => {
   const [message, setMessage] = useState('');
 
   const handleSend = () => {
@@ -20,10 +28,10 @@ export const ChatInput = () => {
   };
 
   return (
-    <Container>
-      <PlusButton>
-        <Plus size={24} />
-      </PlusButton>
+    <Container $isBottomSheetOpen={isBottomSheetOpen}>
+      <ActionButton onClick={onPlusClick}>
+        {isBottomSheetOpen ? <X size={24} /> : <Plus size={24} />}
+      </ActionButton>
       <Input
         placeholder='메시지 입력'
         value={message}
@@ -37,24 +45,42 @@ export const ChatInput = () => {
   );
 };
 
-const Container = styled.div`
+const Container = styled.div<{ $isBottomSheetOpen: boolean }>`
   display: flex;
   align-items: center;
   padding: ${({ theme }) => theme.spacing[3]} ${({ theme }) => theme.spacing[4]};
   border-top: 1px solid ${({ theme }) => theme.colors.gray[30]};
   gap: ${({ theme }) => theme.spacing[3]};
   background-color: ${({ theme }) => theme.colors.gray[0]};
+  position: fixed;
+  bottom: ${({ $isBottomSheetOpen }) => ($isBottomSheetOpen ? '35vh' : '0')};
+  left: 0;
+  right: 0;
+  z-index: 10;
+  transition: bottom 0.1s ease;
 `;
 
-const PlusButton = styled.button`
+const ActionButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
   width: 40px;
   height: 40px;
   border-radius: 50%;
+  background: none;
+  border: none;
   cursor: pointer;
+  color: ${({ theme }) => theme.colors.text.sub};
+  transition: opacity 0.2s;
   flex-shrink: 0;
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  &:active {
+    opacity: 0.5;
+  }
 `;
 
 const Input = styled.input`
