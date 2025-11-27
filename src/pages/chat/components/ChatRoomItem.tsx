@@ -1,14 +1,57 @@
 import styled from '@emotion/styled';
 import type { ChatRoom } from '@/types/chat';
 import { User } from 'lucide-react';
+import { useRef } from 'react';
 
 type ChatRoomItemProps = {
   room: ChatRoom;
+  onLongPress?: () => void;
+  onContextMenu?: (e: React.MouseEvent) => void;
 };
 
-export const ChatRoomItem = ({ room }: ChatRoomItemProps) => {
+export const ChatRoomItem = ({
+  room,
+  onLongPress,
+  onContextMenu,
+}: ChatRoomItemProps) => {
+  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleMouseDown = () => {
+    longPressTimer.current = setTimeout(() => {
+      if (onLongPress) {
+        onLongPress();
+      }
+    }, 500);
+  };
+
+  const handleMouseUp = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+  };
+
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (onContextMenu) {
+      onContextMenu(e);
+    }
+  };
+
   return (
-    <ChatItem>
+    <ChatItem
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseLeave}
+      onContextMenu={handleContextMenu}
+    >
       <ProfileImage>
         <User size={28} />
       </ProfileImage>
