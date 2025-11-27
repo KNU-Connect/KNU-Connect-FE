@@ -1,7 +1,10 @@
 import styled from '@emotion/styled';
-import { useNavigate } from 'react-router-dom';
-import { TextField, MainButton } from '@/components/common';
+import { TextField, MainButton, LoadingDotsOverlay } from '@/components/common';
 import { ROUTES } from '@/routes/paths';
+import {
+  AuthResultModal,
+} from '@/components/auth';
+import { useLoginForm } from '@/hooks/auth';
 import bgImage from '@/assets/knu-building.jpg';
 
 const LoginPageContainer = styled.div`
@@ -72,16 +75,28 @@ const LoginForm = styled.form`
   margin-bottom: ${({ theme }) => theme.spacing[3]};
 `;
 
-export default function LoginPage() {
-  const navigate = useNavigate();
+const LoginButtonGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing[3]};
+  margin-top: ${({ theme }) => theme.spacing[3]};
+`;
 
-  const handleLoginSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    // TODO: react-hook-form + tanstack query로 로그인 API 연동
-  };
+export default function LoginPage() {
+  const {
+    register,
+    handleSubmit,
+    errors,
+    isPending,
+    showResultModal,
+    isLoginError,
+    onSubmit,
+    handleTestLogin,
+    handleModalClose,
+  } = useLoginForm();
 
   const handleSignUpClick = () => {
-    navigate(ROUTES.SIGNUP);
+    window.location.href = ROUTES.SIGNUP;
   };
 
   return (
@@ -94,30 +109,70 @@ export default function LoginPage() {
         <LoginFormContainer>
           <LoginTitle>로그인</LoginTitle>
 
-          <LoginForm onSubmit={handleLoginSubmit}>
+          <LoginForm onSubmit={handleSubmit(onSubmit)}>
             <TextField
-              name='email'
               type='email'
               placeholder='이메일'
               autoComplete='email'
-              required
+              {...register('email')}
             />
+            {errors.email && (
+              <p
+                style={{
+                  color: '#DA2127',
+                  fontSize: '0.875rem',
+                  marginTop: '4px',
+                }}
+              >
+                {errors.email.message}
+              </p>
+            )}
             <TextField
-              name='password'
               type='password'
               placeholder='비밀번호'
               autoComplete='current-password'
-              required
+              {...register('password')}
             />
+            {errors.password && (
+              <p
+                style={{
+                  color: '#DA2127',
+                  fontSize: '0.875rem',
+                  marginTop: '4px',
+                }}
+              >
+                {errors.password.message}
+              </p>
+            )}
 
-            <MainButton type='submit'>로그인</MainButton>
+            <MainButton type='submit' disabled={isPending}>
+              {isPending ? '로그인 중...' : '로그인'}
+            </MainButton>
           </LoginForm>
 
-          <MainButton type='button' onClick={handleSignUpClick}>
-            회원가입
-          </MainButton>
+          <LoginButtonGroup>
+            <MainButton type='button' onClick={handleSignUpClick}>
+              회원가입
+            </MainButton>
+            <MainButton type='button' onClick={handleTestLogin}>
+              테스트 계정으로 로그인
+            </MainButton>
+          </LoginButtonGroup>
         </LoginFormContainer>
       </LoginContent>
+
+      <LoadingDotsOverlay visible={isPending} />
+
+      <AuthResultModal
+        isOpen={showResultModal}
+        isError={isLoginError}
+        message={
+          isLoginError
+            ? '오류로 인해 로그인이 실패했습니다.\n이메일 또는 비밀번호를 확인해주세요.'
+            : '로그인이 완료되었습니다.\n잠시 후 메인 페이지로 이동합니다.'
+        }
+        onClose={handleModalClose}
+      />
     </LoginPageContainer>
   );
 }
