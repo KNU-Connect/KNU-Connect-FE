@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { FileEdit } from 'lucide-react';
+import { APP_WIDTH } from '@/constants/number';
 
 type BottomSheetProps = {
   isOpen: boolean;
@@ -28,6 +29,8 @@ const Container = styled.div<{ $isOpen: boolean }>`
   left: 0;
   right: 0;
   height: 35vh;
+  max-width: ${APP_WIDTH}px;
+  margin: 0 auto;
   background-color: ${({ theme }) => theme.colors.gray[0]};
   z-index: 10;
   display: flex;

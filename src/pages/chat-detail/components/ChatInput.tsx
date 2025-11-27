@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { Plus, X, Send } from 'lucide-react';
 import { useState } from 'react';
+import { APP_WIDTH } from '@/constants/number';
 
 type ChatInputProps = {
   isBottomSheetOpen: boolean;
@@ -56,6 +57,8 @@ const Container = styled.div<{ $isBottomSheetOpen: boolean }>`
   bottom: ${({ $isBottomSheetOpen }) => ($isBottomSheetOpen ? '35vh' : '0')};
   left: 0;
   right: 0;
+  max-width: ${APP_WIDTH}px;
+  margin: 0 auto;
   z-index: 10;
   transition: bottom 0.1s ease;
 `;
