@@ -8,6 +8,9 @@ import {
   MentorPage,
   MyPage,
   SignUpPage,
+  MentorPage,
+  MyPage,
+  NetworkingDetailPage,
 } from '@/pages';
 
 /**
@@ -48,6 +51,10 @@ const router = createBrowserRouter([
       {
         path: ROUTES.MY,
         element: <MyPage />,
+      },
+      {
+        path: ROUTES.NETWORKING_DETAIL,
+        element: <NetworkingDetailPage />,
       },
     ],
   },
