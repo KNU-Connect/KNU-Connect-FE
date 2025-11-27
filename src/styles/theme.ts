@@ -64,6 +64,10 @@ export const theme = {
       fontSize: '0.875rem', // 14px
       lineHeight: '1.1875rem', // 19px
     },
+    body3: {
+      fontSize: '0.75rem', // 12px
+      lineHeight: '1rem', // 16px
+    },
 
     fontWeight: {
       regular: 400,
