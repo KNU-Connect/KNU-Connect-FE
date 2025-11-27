@@ -1,4 +1,4 @@
-import { TextField, MainButton } from '@/components/common';
+import { TextField, MainButton, LoadingDotsOverlay } from '@/components/common';
 import {
   FormContainer,
   Form,
@@ -6,6 +6,8 @@ import {
   VerificationButton,
   FieldErrorMessage,
   FieldContainer,
+  VerificationInputWrapper,
+  VerificationTimer,
 } from './signUpStyles';
 import { useSignUpStep1 } from '@/hooks/auth';
 
@@ -17,7 +19,16 @@ export const SignUpStep1 = ({ onNext }: SignUpStep1Props) => {
   const {
     register,
     errors,
-    isSubmitting,
+    isSending,
+    isVerifying,
+    isEmailVerifiedFresh,
+    emailRemainingSeconds,
+    password,
+    passwordConfirm,
+    isPasswordMatch,
+    verificationStatus,
+    verificationMessage,
+    isNextDisabled,
     handleSendVerificationCode,
     handleVerifyVerificationCode,
     handleStep1Submit,
@@ -47,6 +58,7 @@ export const SignUpStep1 = ({ onNext }: SignUpStep1Props) => {
             <VerificationButton
               type='button'
               fullWidth={false}
+              disabled={isSending || isEmailVerifiedFresh}
               onClick={handleSendVerificationCode}
             >
               인증번호 전송
@@ -59,20 +71,48 @@ export const SignUpStep1 = ({ onNext }: SignUpStep1Props) => {
 
         <FieldContainer>
           <InputField>
-            <TextField
-              placeholder='인증번호 입력'
-              {...register('verificationCode')}
-            />
+            <VerificationInputWrapper>
+              <TextField
+                placeholder='인증번호 입력'
+                {...register('verificationCode')}
+              />
+              {emailRemainingSeconds !== null && (
+                <VerificationTimer>
+                  {`${String(Math.floor(emailRemainingSeconds / 60)).padStart(
+                    1,
+                    '0',
+                  )}:${String(emailRemainingSeconds % 60).padStart(2, '0')}`}
+                </VerificationTimer>
+              )}
+            </VerificationInputWrapper>
             <VerificationButton
               type='button'
               fullWidth={false}
+              disabled={isVerifying || isEmailVerifiedFresh}
               onClick={handleVerifyVerificationCode}
             >
               인증번호 확인
             </VerificationButton>
           </InputField>
-          <FieldErrorMessage hasError={!!errors.verificationCode}>
-            {errors.verificationCode?.message || '\u00A0'}
+          <FieldErrorMessage
+            hasError={
+              !!errors.verificationCode ||
+              verificationStatus === 'error' ||
+              verificationStatus === 'success'
+            }
+            style={
+              verificationStatus === 'success'
+                ? { color: '#32CD32' }
+                : undefined
+            }
+          >
+            {errors.verificationCode?.message ||
+              (verificationStatus === 'success'
+                ? verificationMessage || '인증번호가 확인되었습니다.'
+                : verificationStatus === 'error'
+                  ? verificationMessage ||
+                    '인증번호가 올바르지 않습니다. 다시 확인해주세요.'
+                  : '\u00A0')}
           </FieldErrorMessage>
         </FieldContainer>
 
@@ -93,15 +133,25 @@ export const SignUpStep1 = ({ onNext }: SignUpStep1Props) => {
             placeholder='비밀번호 확인'
             {...register('passwordConfirm')}
           />
-          <FieldErrorMessage hasError={!!errors.passwordConfirm}>
-            {errors.passwordConfirm?.message || '\u00A0'}
+          <FieldErrorMessage
+            hasError={
+              !!errors.passwordConfirm ||
+              (!!password && !!passwordConfirm && !isPasswordMatch)
+            }
+          >
+            {errors.passwordConfirm?.message ||
+              (!!password && !!passwordConfirm && !isPasswordMatch
+                ? '비밀번호가 일치하지 않습니다.'
+                : '\u00A0')}
           </FieldErrorMessage>
         </FieldContainer>
 
-        <MainButton type='submit' disabled={isSubmitting}>
+        <MainButton type='submit' disabled={isNextDisabled}>
           다음
         </MainButton>
       </Form>
+
+      <LoadingDotsOverlay visible={isSending || isVerifying} />
     </FormContainer>
   );
 };
