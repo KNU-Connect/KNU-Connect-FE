@@ -1,9 +1,13 @@
-import { AppLayout } from '@/components';
+import { AppLayout, ProtectedRoute } from '@/components';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ROUTES } from './paths';
 import {
   ChatPage,
   HomePage,
+  LoginPage,
+  MentorPage,
+  MyPage,
+  SignUpPage,
   MentorPage,
   MyPage,
   NetworkingDetailPage,
@@ -12,12 +16,25 @@ import {
 /**
  * 애플리케이션 라우터 설정
  * - 각 페이지별로 다른 레이아웃 타입 적용
+ * - 로그인, 회원가입 페이지는 레이아웃 없이 표시
  * - 404 페이지는 레이아웃 없이 표시
  */
 const router = createBrowserRouter([
   {
+    path: ROUTES.LOGIN,
+    element: <LoginPage />,
+  },
+  {
+    path: ROUTES.SIGNUP,
+    element: <SignUpPage />,
+  },
+  {
     path: ROUTES.HOME,
-    element: <AppLayout />,
+    element: (
+      <ProtectedRoute>
+        <AppLayout />
+      </ProtectedRoute>
+    ),
     children: [
       {
         index: true,
