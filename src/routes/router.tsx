@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ROUTES } from './paths';
 import {
   ChatPage,
+  ChatDetailPage,
   HomePage,
   MentorPage,
   MyPage,
@@ -38,6 +39,16 @@ const router = createBrowserRouter([
       {
         path: ROUTES.NETWORKING_DETAIL,
         element: <NetworkingDetailPage />,
+      },
+    ],
+  },
+  {
+    path: ROUTES.CHAT_DETAIL,
+    element: <AppLayout headerType='none' navType='none' />,
+    children: [
+      {
+        index: true,
+        element: <ChatDetailPage />,
       },
     ],
   },
