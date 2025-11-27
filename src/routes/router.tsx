@@ -1,4 +1,4 @@
-import { AppLayout } from '@/components';
+import { AppLayout, ProtectedRoute } from '@/components';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ROUTES } from './paths';
 import {
@@ -27,7 +27,11 @@ const router = createBrowserRouter([
   },
   {
     path: ROUTES.HOME,
-    element: <AppLayout />,
+    element: (
+      <ProtectedRoute>
+        <AppLayout />
+      </ProtectedRoute>
+    ),
     children: [
       {
         index: true,
