@@ -50,6 +50,8 @@ export const SignUpSchema = z
     verificationCode: z.string().min(1, '인증번호를 입력해주세요.'),
     password: z.string().min(8, '비밀번호는 8자 이상이어야 합니다.'),
     passwordConfirm: z.string().min(1, '비밀번호 확인을 입력해주세요.'),
+    emailVerifiedAt: z.number().optional().nullable(),
+    emailCodeSentAt: z.number().optional().nullable(),
 
     status: z.enum(statusValues, '재학 구분을 선택해주세요.'),
     department: z.enum(departmentValues),
