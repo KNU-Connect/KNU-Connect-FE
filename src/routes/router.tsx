@@ -9,8 +9,6 @@ import {
   MentorPage,
   MyPage,
   SignUpPage,
-  MentorPage,
-  MyPage,
   NetworkingDetailPage,
 } from '@/pages';
 
