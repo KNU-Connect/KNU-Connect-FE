@@ -3,6 +3,7 @@ export const ROUTES = {
   LOGIN: '/login',
   SIGNUP: '/signup',
   CHAT: '/chat',
+  CHAT_DETAIL: '/chat/:id',
   MENTOR: '/mentor',
   MY: '/my',
   NETWORKING_DETAIL: '/networking/:id',
