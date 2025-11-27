@@ -7,6 +7,7 @@ import {
   FieldContainer,
   MentorToggleContainer,
   MentorToggleButton,
+  MentorDescription,
   ButtonContainer,
 } from './signUpStyles';
 import { useSignUpStep2 } from '@/hooks/auth';
@@ -23,11 +24,11 @@ export const SignUpStep2 = ({ onPrev, onSubmitFinal }: SignUpStep2Props) => {
     register,
     handleSubmit,
     errors,
-    isSubmitting,
     isMentor,
     handleStep2Submit,
     handleMentorToggle,
     watch,
+    isSignUpDisabled,
   } = useSignUpStep2(onPrev, onSubmitFinal);
 
   const status = watch('status');
@@ -107,6 +108,14 @@ export const SignUpStep2 = ({ onPrev, onSubmitFinal }: SignUpStep2Props) => {
         </FieldContainer>
 
         <FieldLabel>멘토 활동 여부</FieldLabel>
+        <MentorDescription>
+          쿠넥트에서 멘토로 활동하실 의향이 있다면 &apos;네&apos;를
+          선택해주세요.
+          <br />
+          멘토로 활동해도 멘티로도 참여가 가능합니다.
+          <br />
+          가입 후 내정보 페이지에서 수정이 가능합니다.
+        </MentorDescription>
         <MentorToggleContainer>
           <MentorToggleButton
             type='button'
@@ -128,7 +137,11 @@ export const SignUpStep2 = ({ onPrev, onSubmitFinal }: SignUpStep2Props) => {
           <MainButton type='button' fullWidth={true} onClick={onPrev}>
             이전
           </MainButton>
-          <MainButton type='submit' disabled={isSubmitting} fullWidth={true}>
+          <MainButton
+            type='submit'
+            disabled={isSignUpDisabled}
+            fullWidth={true}
+          >
             회원가입
           </MainButton>
         </ButtonContainer>
