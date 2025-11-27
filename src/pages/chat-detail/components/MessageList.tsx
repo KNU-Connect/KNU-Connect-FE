@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import type { ChatMessage } from '@/types/chat';
 import { MessageItem } from './MessageItem';
-import { formatTime } from '../utils/formatTime';
+import { formatTime } from '../../chat/utils/formatTime';
 
 type MessageListProps = {
   messages: ChatMessage[];
