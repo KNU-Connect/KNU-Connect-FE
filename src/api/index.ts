@@ -4,4 +4,3 @@ export * from './auth/logout';
 export * from './auth/refresh';
 export * from './auth/signup';
 export * from './auth/email';
-export * from './networking/create';

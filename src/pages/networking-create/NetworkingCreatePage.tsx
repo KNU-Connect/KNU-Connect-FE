@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { APP_WIDTH } from '@/constants/number';
-import { useCreateNetworking } from '@/api';
+import { useCreateNetworking } from './hooks/useCreateNetworking';
 import {
   NetworkingCreateHeader,
   TitleInput,
@@ -13,6 +13,7 @@ import {
 
 const NetworkingCreatePage = () => {
   const navigate = useNavigate();
+  const { chatId } = useParams<{ chatId: string }>();
   const createNetworkingMutation = useCreateNetworking();
   const [title, setTitle] = useState('');
   const [contents, setContents] = useState('');
@@ -26,12 +27,15 @@ const NetworkingCreatePage = () => {
 
     try {
       await createNetworkingMutation.mutateAsync({
-        title,
-        contents:
-          contents ||
-          '멘토링에 대한 일정을 공유해 같이 네트워킹할 멘티를 찾아보세요.',
-        maxNumber: participantCount,
-        representativeId: selectedRepresentativeId,
+        requestBody: {
+          title,
+          contents:
+            contents ||
+            '멘토링에 대한 일정을 공유해 같이 네트워킹할 멘티를 찾아보세요.',
+          maxNumber: participantCount,
+          representativeId: selectedRepresentativeId,
+        },
+        chatRoomId: chatId ? Number(chatId) : undefined,
       });
       navigate(-1);
     } catch (error) {
