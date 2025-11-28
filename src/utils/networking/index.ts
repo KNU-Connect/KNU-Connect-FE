@@ -1,0 +1,2 @@
+export { getTagColor } from './getTagColor';
+
