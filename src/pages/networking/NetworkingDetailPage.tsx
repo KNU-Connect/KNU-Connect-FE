@@ -1,22 +1,34 @@
 import styled from '@emotion/styled';
 import { useParams } from 'react-router-dom';
-import { mockNetworkingPosts } from '@/data/mockNetworking';
 import { NetworkingDescription, RepresentInfo } from './components';
 import { NetworkingDetailHeader } from './components/NetworkingDetailHeader';
 import { HEADER_HEIGHT, NAV_HEIGHT } from '@/constants';
+import { useNetworkingDetail } from './hooks/useNetworkingDetail';
+import { convertDetailToPost } from './services/networking';
 
 const NetworkingDetailPage = () => {
   const { id } = useParams<{ id: string }>();
+  const networkingId = id ? Number(id) : 0;
 
-  const post = mockNetworkingPosts.find((p) => p.id === Number(id));
+  const { data, isLoading, error } = useNetworkingDetail(networkingId);
 
-  if (!post) {
+  if (isLoading) {
+    return (
+      <Container>
+        <LoadingMessage>로딩 중...</LoadingMessage>
+      </Container>
+    );
+  }
+
+  if (error || !data) {
     return (
       <Container>
         <ErrorMessage>게시글을 찾을 수 없습니다.</ErrorMessage>
       </Container>
     );
   }
+
+  const post = convertDetailToPost(data);
 
   return (
     <Container>
@@ -74,6 +86,15 @@ const JoinButton = styled.button`
   &:active {
     opacity: 0.8;
   }
+`;
+
+const LoadingMessage = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: ${({ theme }) => theme.spacing[10]};
+  font-size: ${({ theme }) => theme.typography.body1.fontSize};
+  color: ${({ theme }) => theme.colors.text.sub};
 `;
 
 const ErrorMessage = styled.div`

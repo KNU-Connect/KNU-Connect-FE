@@ -1,13 +1,38 @@
 import styled from '@emotion/styled';
 import { Search } from 'lucide-react';
+import { useState } from 'react';
 
-export const SearchBar = () => {
+type SearchBarProps = {
+  onSearch: (keyword: string) => void;
+};
+
+export const SearchBar = ({ onSearch }: SearchBarProps) => {
+  const [keyword, setKeyword] = useState('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSearch(keyword);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e);
+    }
+  };
+
   return (
     <Container>
-      <Input placeholder='게시글 검색하기' />
-      <Icon>
-        <Search size={20} />
-      </Icon>
+      <Form onSubmit={handleSubmit}>
+        <Input
+          placeholder='게시글 검색하기'
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
+          onKeyDown={handleKeyDown}
+        />
+        <Icon onClick={handleSubmit}>
+          <Search size={20} />
+        </Icon>
+      </Form>
     </Container>
   );
 };
@@ -17,6 +42,11 @@ const Container = styled.div`
   width: 100%;
   max-width: 100%;
   padding: 0 ${({ theme }) => theme.spacing[6]};
+`;
+
+const Form = styled.form`
+  position: relative;
+  width: 100%;
 `;
 
 const Input = styled.input`
@@ -46,4 +76,5 @@ const Icon = styled.div`
   top: 50%;
   transform: translateY(-50%);
   color: ${({ theme }) => theme.colors.text.sub};
+  cursor: pointer;
 `;
