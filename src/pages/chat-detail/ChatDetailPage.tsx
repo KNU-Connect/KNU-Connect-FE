@@ -1,7 +1,8 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { mockChatDetails } from '@/data/mockChat';
+import { ROUTES } from '@/routes/paths';
 import {
   ChatDetailHeader,
   MessageList,
@@ -11,6 +12,7 @@ import {
 
 const ChatDetailPage = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const chatDetail = id ? mockChatDetails[Number(id)] : undefined;
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
@@ -23,7 +25,9 @@ const ChatDetailPage = () => {
   }
 
   const handleNetworkPostClick = () => {
-    // TODO: 네트워킹 글 생성 페이지로 이동
+    if (id) {
+      navigate(ROUTES.NETWORKING_CREATE.replace(':chatId', id));
+    }
     setIsBottomSheetOpen(false);
   };
 

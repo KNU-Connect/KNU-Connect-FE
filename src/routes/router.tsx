@@ -10,6 +10,7 @@ import {
   MyPage,
   SignUpPage,
   NetworkingDetailPage,
+  NetworkingCreatePage,
 } from '@/pages';
 
 /**
@@ -64,6 +65,16 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <ChatDetailPage />,
+      },
+    ],
+  },
+  {
+    path: ROUTES.NETWORKING_CREATE,
+    element: <AppLayout headerType='none' navType='none' />,
+    children: [
+      {
+        index: true,
+        element: <NetworkingCreatePage />,
       },
     ],
   },

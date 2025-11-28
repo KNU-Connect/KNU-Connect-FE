@@ -2,19 +2,11 @@ import { useTheme } from '@emotion/react';
 import type { NetworkingPost } from '@/types/networking';
 import styled from '@emotion/styled';
 import { User } from 'lucide-react';
+import { getTagColor } from '@/utils';
+import { Tag } from '@/components/common';
 
 export const RepresentInfo = ({ post }: { post: NetworkingPost }) => {
   const theme = useTheme();
-
-  const getTagColor = (tag: string) => {
-    if (tag === '프론트엔드' || tag === '백엔드') {
-      return theme.colors.tag.purple;
-    }
-    if (tag === '취업') {
-      return theme.colors.tag.blue;
-    }
-    return theme.colors.tag.gold;
-  };
 
   return (
     <Container>
@@ -28,9 +20,7 @@ export const RepresentInfo = ({ post }: { post: NetworkingPost }) => {
           <Affiliation>{post.representative.affiliation}</Affiliation>
           <Tags>
             {post.representative.tags.map((tag, index) => (
-              <Tag key={index} $color={getTagColor(tag)}>
-                {tag}
-              </Tag>
+              <Tag key={index} tag={tag} color={getTagColor(tag, theme)} />
             ))}
           </Tags>
           <Bio>{post.representative.bio}</Bio>
@@ -98,16 +88,6 @@ const Tags = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: ${({ theme }) => theme.spacing[2]};
-`;
-
-const Tag = styled.span<{ $color: string }>`
-  padding: ${({ theme }) => theme.spacing[1]} ${({ theme }) => theme.spacing[3]};
-  background-color: ${({ $color }) => $color};
-  color: ${({ theme }) => theme.colors.text.white};
-  border-radius: 12px;
-  font-size: ${({ theme }) => theme.typography.body2.fontSize};
-  line-height: ${({ theme }) => theme.typography.body2.lineHeight};
-  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
 `;
 
 const Bio = styled.p`
