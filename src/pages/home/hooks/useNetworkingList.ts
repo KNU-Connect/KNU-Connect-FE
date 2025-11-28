@@ -3,6 +3,7 @@ import {
   getNetworkingList,
   type GetNetworkingListParams,
 } from '../services/networking';
+import { networkingQueryKeys } from '@/constants/queryKeys';
 
 export function useNetworkingList(
   params?: Omit<GetNetworkingListParams, 'pageable'> & {
@@ -10,7 +11,7 @@ export function useNetworkingList(
   },
 ) {
   return useInfiniteQuery({
-    queryKey: ['networking', 'list', params],
+    queryKey: networkingQueryKeys.list(params),
     queryFn: ({ pageParam = 0 }) =>
       getNetworkingList({
         ...params,
