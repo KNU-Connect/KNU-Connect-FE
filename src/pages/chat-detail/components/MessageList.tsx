@@ -55,6 +55,5 @@ const Container = styled.div<{ $isBottomSheetOpen: boolean }>`
   padding: ${({ theme }) => theme.spacing[4]};
   padding-bottom: ${({ $isBottomSheetOpen }) =>
     $isBottomSheetOpen ? 'calc(40vh + 64px)' : '64px'};
-  flex: 1;
-  overflow-y: auto;
+  width: 100%;
 `;

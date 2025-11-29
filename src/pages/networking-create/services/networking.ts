@@ -1,4 +1,5 @@
 import axiosInstance from '@/api/axiosInstance';
+import { API_ENDPOINTS } from '@/constants';
 
 export interface CreateNetworkingRequestBody {
   title: string;
@@ -25,7 +26,7 @@ export async function createNetworking({
   chatRoomId,
 }: CreateNetworkingParams): Promise<CreateNetworkingResponseBody> {
   const { data } = await axiosInstance.post<CreateNetworkingResponseBody>(
-    '/networking',
+    API_ENDPOINTS.NETWORKING,
     requestBody,
     {
       params: chatRoomId ? { chat_room_id: chatRoomId } : undefined,

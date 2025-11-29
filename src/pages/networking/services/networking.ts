@@ -1,4 +1,5 @@
 import axiosInstance from '@/api/axiosInstance';
+import { API_ENDPOINTS } from '@/constants';
 import type { NetworkingPost, NetworkingTag } from '@/types/networking';
 
 export interface NetworkingDetailResponse {
@@ -23,7 +24,7 @@ export async function getNetworkingDetail(
   networkingId: number,
 ): Promise<NetworkingDetailResponse> {
   const { data } = await axiosInstance.get<NetworkingDetailResponse>(
-    `/networking/${networkingId}`,
+    API_ENDPOINTS.NETWORKING_DETAIL(networkingId),
   );
 
   return data;
@@ -60,7 +61,7 @@ export function convertDetailToPost(
 
   // tags 생성: interest, career, mbti를 조합
   const tags: NetworkingTag[] = [];
-  
+
   // interest 변환
   if (detail.representative.interest === 'frontend') {
     tags.push('프론트엔드');
@@ -94,3 +95,10 @@ export function convertDetailToPost(
   };
 }
 
+export async function participateNetworking(
+  networkingId: number,
+): Promise<void> {
+  await axiosInstance.post(
+    API_ENDPOINTS.NETWORKING_PARTICIPATION(networkingId),
+  );
+}

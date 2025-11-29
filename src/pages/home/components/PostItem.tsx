@@ -1,11 +1,20 @@
 import styled from '@emotion/styled';
 import type { NetworkingPost } from '@/types/networking';
+import { useParticipateNetworking } from '@/pages/networking/hooks/useParticipateNetworking';
 
 type PostItemProps = {
   post: NetworkingPost;
 };
 
 export const PostItem = ({ post }: PostItemProps) => {
+  const { mutate: participate, isPending } = useParticipateNetworking();
+
+  const handleJoin = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    participate(post.id);
+  };
+
   return (
     <Item>
       <PostContent>
@@ -18,13 +27,8 @@ export const PostItem = ({ post }: PostItemProps) => {
           <Date>{post.date}</Date>
         </PostMeta>
       </PostContent>
-      <JoinButton
-        onClick={(e) => {
-          e.stopPropagation();
-          // TODO: 그룹채팅방 참여 로직
-        }}
-      >
-        그룹채팅방 참여하기
+      <JoinButton onClick={handleJoin} disabled={isPending}>
+        {isPending ? '참여 중...' : '그룹채팅방 참여하기'}
       </JoinButton>
     </Item>
   );
@@ -115,11 +119,16 @@ const JoinButton = styled.button`
   box-sizing: border-box;
   text-align: center;
 
-  &:hover {
+  &:hover:not(:disabled) {
     opacity: 0.9;
   }
 
-  &:active {
+  &:active:not(:disabled) {
     opacity: 0.8;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 `;
