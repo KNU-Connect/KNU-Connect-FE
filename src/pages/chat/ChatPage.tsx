@@ -1,11 +1,13 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
-import { mockChatRooms } from '@/data/mockChat';
 import { ChatHeader, ChatList, LeaveChatModal } from './components';
+import { useChatRoomList } from './hooks/useChatRoomList';
+import { convertChatRoomResponseToRoom } from './services/chat';
 
 const ChatPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
+  const { data, isLoading, error } = useChatRoomList();
 
   const handleRoomLongPress = (roomId: number) => {
     setSelectedRoomId(roomId);
@@ -22,18 +24,25 @@ const ChatPage = () => {
     if (selectedRoomId !== null) {
       // TODO: 채팅방 나가기 API 호출
       console.log('Leave chat room:', selectedRoomId);
-      // mockChatRooms에서 해당 room 제거하는 로직은 실제 API 연동 시 구현
     }
   };
+
+  const rooms = data?.chat_rooms.map(convertChatRoomResponseToRoom) ?? [];
 
   return (
     <Container>
       <ChatHeader title='채팅' />
-      <ChatList
-        rooms={mockChatRooms}
-        onRoomLongPress={handleRoomLongPress}
-        onRoomContextMenu={handleRoomContextMenu}
-      />
+      {isLoading && <LoadingText>로딩 중...</LoadingText>}
+      {error && (
+        <ErrorText>채팅방을 불러오는 중 오류가 발생했습니다.</ErrorText>
+      )}
+      {!isLoading && !error && (
+        <ChatList
+          rooms={rooms}
+          onRoomLongPress={handleRoomLongPress}
+          onRoomContextMenu={handleRoomContextMenu}
+        />
+      )}
       <LeaveChatModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -51,4 +60,18 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   overflow: hidden;
+`;
+
+const LoadingText = styled.div`
+  padding: ${({ theme }) => theme.spacing[4]};
+  text-align: center;
+  color: ${({ theme }) => theme.colors.text.sub};
+  font-size: ${({ theme }) => theme.typography.body1.fontSize};
+`;
+
+const ErrorText = styled.div`
+  padding: ${({ theme }) => theme.spacing[4]};
+  text-align: center;
+  color: ${({ theme }) => theme.colors.primary};
+  font-size: ${({ theme }) => theme.typography.body1.fontSize};
 `;
