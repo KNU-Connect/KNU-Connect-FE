@@ -3,11 +3,13 @@ import { useState } from 'react';
 import { ChatHeader, ChatList, LeaveChatModal } from './components';
 import { useChatRoomList } from './hooks/useChatRoomList';
 import { convertChatRoomResponseToRoom } from './services/chat';
+import { useLeaveChatRoom } from './hooks/useLeaveChatRoom';
 
 const ChatPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
   const { data, isLoading, error } = useChatRoomList();
+  const { mutate: leaveChat, isPending } = useLeaveChatRoom();
 
   const handleRoomLongPress = (roomId: number) => {
     setSelectedRoomId(roomId);
@@ -22,8 +24,12 @@ const ChatPage = () => {
 
   const handleLeaveChat = () => {
     if (selectedRoomId !== null) {
-      // TODO: 채팅방 나가기 API 호출
-      console.log('Leave chat room:', selectedRoomId);
+      leaveChat(selectedRoomId, {
+        onSuccess: () => {
+          setIsModalOpen(false);
+          setSelectedRoomId(null);
+        },
+      });
     }
   };
 
@@ -47,6 +53,7 @@ const ChatPage = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={handleLeaveChat}
+        isPending={isPending}
       />
     </Container>
   );

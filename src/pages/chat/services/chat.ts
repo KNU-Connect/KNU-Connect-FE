@@ -48,3 +48,7 @@ export function convertChatRoomResponseToRoom(
     unreadCount: room.unread_count,
   };
 }
+
+export async function leaveChatRoom(chatRoomId: number): Promise<void> {
+  await axiosInstance.delete(API_ENDPOINTS.LEAVE_CHAT_ROOM(chatRoomId));
+}
