@@ -10,3 +10,10 @@ export const networkingQueryKeys = {
   ) => [...networkingQueryKeys.lists(), params] as const,
   detail: (id: number) => [...networkingQueryKeys.all, 'detail', id] as const,
 };
+
+export const chatQueryKeys = {
+  all: ['chat'] as const,
+  rooms: () => [...chatQueryKeys.all, 'rooms'] as const,
+  messages: (chatRoomId: number) =>
+    [...chatQueryKeys.all, 'messages', chatRoomId] as const,
+};

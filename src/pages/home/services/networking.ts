@@ -1,4 +1,5 @@
 import axiosInstance from '@/api/axiosInstance';
+import { API_ENDPOINTS } from '@/constants';
 import type { NetworkingPost } from '@/types/networking';
 
 export interface NetworkingBoard {
@@ -32,7 +33,7 @@ export async function getNetworkingList(
   params?: GetNetworkingListParams,
 ): Promise<GetNetworkingListResponse> {
   const { data } = await axiosInstance.get<GetNetworkingListResponse>(
-    '/networking',
+    API_ENDPOINTS.NETWORKING,
     {
       params: {
         keyword: params?.keyword,

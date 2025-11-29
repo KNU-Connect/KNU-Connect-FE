@@ -5,12 +5,14 @@ import { NetworkingDetailHeader } from './components/NetworkingDetailHeader';
 import { HEADER_HEIGHT, NAV_HEIGHT } from '@/constants';
 import { useNetworkingDetail } from './hooks/useNetworkingDetail';
 import { convertDetailToPost } from './services/networking';
+import { useParticipateNetworking } from './hooks/useParticipateNetworking';
 
 const NetworkingDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const networkingId = id ? Number(id) : 0;
 
   const { data, isLoading, error } = useNetworkingDetail(networkingId);
+  const { mutate: participate, isPending } = useParticipateNetworking();
 
   if (isLoading) {
     return (
@@ -37,11 +39,10 @@ const NetworkingDetailPage = () => {
         <NetworkingDescription post={post} />
         <RepresentInfo post={post} />
         <JoinButton
-          onClick={() => {
-            // TODO: 그룹채팅방 참여 로직
-          }}
+          onClick={() => participate(networkingId)}
+          disabled={isPending}
         >
-          그룹채팅방 참여하기
+          {isPending ? '참여 중...' : '그룹채팅방 참여하기'}
         </JoinButton>
       </Content>
     </Container>
@@ -79,12 +80,17 @@ const JoinButton = styled.button`
   text-align: center;
   box-sizing: border-box;
 
-  &:hover {
+  &:hover:not(:disabled) {
     opacity: 0.9;
   }
 
-  &:active {
+  &:active:not(:disabled) {
     opacity: 0.8;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 `;
 

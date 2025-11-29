@@ -6,18 +6,19 @@ type LeaveChatModalProps = {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
+  isPending?: boolean;
 };
 
 export const LeaveChatModal = ({
   isOpen,
   onClose,
   onConfirm,
+  isPending = false,
 }: LeaveChatModalProps) => {
   if (!isOpen) return null;
 
   const handleConfirm = () => {
     onConfirm();
-    onClose();
   };
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -34,10 +35,14 @@ export const LeaveChatModal = ({
         </CloseButton>
         <Question>채팅방을 나가시겠습니까?</Question>
         <ButtonContainer>
-          <Button $variant='confirm' onClick={handleConfirm}>
-            예
+          <Button
+            $variant='confirm'
+            onClick={handleConfirm}
+            disabled={isPending}
+          >
+            {isPending ? '처리 중...' : '예'}
           </Button>
-          <Button $variant='cancel' onClick={onClose}>
+          <Button $variant='cancel' onClick={onClose} disabled={isPending}>
             아니오
           </Button>
         </ButtonContainer>
@@ -113,10 +118,15 @@ const Button = styled.button<{ $variant: 'confirm' | 'cancel' }>`
   color: ${({ $variant, theme }) =>
     $variant === 'confirm' ? theme.colors.gray[0] : theme.colors.text.default};
 
-  &:hover {
+  &:hover:not(:disabled) {
     ${({ $variant, theme }) =>
       $variant === 'confirm'
         ? 'opacity: 0.9;'
         : `background-color: ${theme.colors.gray[40]};`}
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 `;

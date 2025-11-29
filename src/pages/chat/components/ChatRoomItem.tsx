@@ -103,7 +103,7 @@ const ChatInfo = styled.div`
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing[1]};
   flex: 1;
-  min-width: 0;
+  min-height: 48px;
 `;
 
 const ChatName = styled.div`
