@@ -6,5 +6,6 @@ export const API_ENDPOINTS = {
   
   // Chat
   CHAT_ROOMS: '/chat-rooms',
+  CHAT_MESSAGES: (chatRoomId: number) => `/chat-rooms/${chatRoomId}`,
 } as const;
 
