@@ -10,3 +10,22 @@ export const networkingQueryKeys = {
   ) => [...networkingQueryKeys.lists(), params] as const,
   detail: (id: number) => [...networkingQueryKeys.all, 'detail', id] as const,
 };
+
+export const userQueryKeys = {
+  all: ['user'] as const,
+  profile: () => [...userQueryKeys.all, 'profile'] as const,
+};
+
+type GetMyPostsParams = {
+  pageable?: { size?: number; sort?: string[] };
+};
+
+export const myPostsQueryKeys = {
+  all: ['myPosts'] as const,
+  lists: () => [...myPostsQueryKeys.all, 'list'] as const,
+  list: (
+    params?: Omit<GetMyPostsParams, 'pageable'> & {
+      pageable?: { size?: number; sort?: string[] };
+    },
+  ) => [...myPostsQueryKeys.lists(), params] as const,
+};
