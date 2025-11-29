@@ -28,6 +28,8 @@ export const myPostsQueryKeys = {
       pageable?: { size?: number; sort?: string[] };
     },
   ) => [...myPostsQueryKeys.lists(), params] as const,
+};
+
 export const chatQueryKeys = {
   all: ['chat'] as const,
   rooms: () => [...chatQueryKeys.all, 'rooms'] as const,
