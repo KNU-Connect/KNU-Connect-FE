@@ -1,10 +1,8 @@
 import styled from '@emotion/styled';
 import { TextField, MainButton, LoadingDotsOverlay } from '@/components/common';
 import { ROUTES } from '@/routes/paths';
-import {
-  AuthResultModal,
-} from '@/components/auth';
-import { useLoginForm } from '@/hooks/auth';
+import { AuthResultModal } from './components';
+import { useLoginForm } from './hooks';
 import bgImage from '@/assets/knu-building.jpg';
 
 const LoginPageContainer = styled.div`

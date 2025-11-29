@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import axiosInstance from '../axiosInstance';
+import axiosInstance from '@/api/axiosInstance';
 import { useAuthStore } from '@/store/authStore';
 
 export interface LoginRequestBody {

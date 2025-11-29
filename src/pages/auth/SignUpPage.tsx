@@ -6,11 +6,11 @@ import {
   SignUpPageContainer,
   AppLogo,
   SignUpTitle,
-} from '@/components/auth/signUpStyles';
+} from './components/signUpStyles';
 import { LoadingDotsOverlay } from '@/components/common';
-import { AuthResultModal, SignUpStep1, SignUpStep2 } from '@/components/auth';
-import { SignUpSchema, type SignUpSchemaType } from './signup/signUpSchema';
-import { useSignup } from '@/api';
+import { AuthResultModal, SignUpStep1, SignUpStep2 } from './components';
+import { SignUpSchema, type SignUpSchemaType } from './hooks/signUpSchema';
+import { useSignup } from './services';
 import { ROUTES } from '@/routes/paths';
 import { SIGNUP_REDIRECT_DELAY } from '@/constants';
 

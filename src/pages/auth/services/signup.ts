@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
-import axiosInstance from '../axiosInstance';
-import { type SignUpSchemaType } from '@/pages/auth/signup/signUpSchema';
+import axiosInstance from '@/api/axiosInstance';
+import { type SignUpSchemaType } from '../hooks/signUpSchema';
 
 export interface SignupRequestBody {
   name: string;

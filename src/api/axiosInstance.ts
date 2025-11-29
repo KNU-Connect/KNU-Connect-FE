@@ -1,5 +1,6 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 import { useAuthStore } from '@/store/authStore';
+import { refreshToken } from '@/pages/auth/services/refresh';
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -31,11 +32,8 @@ axiosInstance.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const response = await axiosInstance.post<{ token: string }>(
-          '/auth/refresh',
-        );
-
-        const { token: newAccessToken } = response.data;
+        const response = await refreshToken();
+        const { token: newAccessToken } = response;
 
         useAuthStore.getState().setAccessToken(newAccessToken);
 

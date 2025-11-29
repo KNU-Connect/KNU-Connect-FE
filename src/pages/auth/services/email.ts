@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import axiosInstance from '../axiosInstance';
+import axiosInstance from '@/api/axiosInstance';
 
 export interface EmailSendRequestBody {
   email: string;

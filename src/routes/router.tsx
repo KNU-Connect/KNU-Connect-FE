@@ -1,4 +1,5 @@
-import { AppLayout, ProtectedRoute } from '@/components';
+import { AppLayout } from '@/components';
+import { ProtectedRoute } from '@/pages/auth/components';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ROUTES } from './paths';
 import {

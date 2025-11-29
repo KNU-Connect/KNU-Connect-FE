@@ -6,7 +6,7 @@ import {
   MentorToggleContainer,
   MentorToggleButton,
   MentorDescription,
-} from '@/components/auth/signUpStyles';
+} from '@/pages/auth/components/signUpStyles';
 import { theme } from '@/styles/theme';
 import {
   careerValues,
@@ -14,7 +14,7 @@ import {
   interestValues,
   mbtiValues,
   statusValues,
-} from '@/pages/auth/signup/signUpSchema';
+} from '@/pages/auth/hooks/signUpSchema';
 
 type ProfileHeaderSectionProps = {
   isEditMode: boolean;
