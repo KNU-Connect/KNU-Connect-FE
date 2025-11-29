@@ -10,9 +10,8 @@ import {
   MentorDescription,
   ButtonContainer,
 } from './signUpStyles';
-import { useSignUpStep2 } from '@/hooks/auth';
-import { type SignUpSchemaType } from '@/pages/auth/signup/signUpSchema';
-import { mbtiValues } from '@/pages/auth/signup/signUpSchema';
+import { useSignUpStep2 } from '../hooks';
+import { type SignUpSchemaType, mbtiValues } from '../hooks/signUpSchema';
 
 interface SignUpStep2Props {
   onPrev: () => void;

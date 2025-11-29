@@ -1,5 +1,5 @@
 import { useFormContext } from 'react-hook-form';
-import { type SignUpSchemaType } from '@/pages/auth/signup/signUpSchema';
+import { type SignUpSchemaType } from './signUpSchema';
 
 export const useSignUpStep2 = (
   onPrev: () => void,

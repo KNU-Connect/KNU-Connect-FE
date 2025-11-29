@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { type SignUpSchemaType } from '@/pages/auth/signup/signUpSchema';
-import { useSendVerificationCode, useVerifyVerificationCode } from '@/api';
+import { type SignUpSchemaType } from './signUpSchema';
+import {
+  useSendVerificationCode,
+  useVerifyVerificationCode,
+} from '../services/email';
 import { AUTH_CODE_TTL } from '@/constants';
 
 export const useSignUpStep1 = (onNext: () => void) => {

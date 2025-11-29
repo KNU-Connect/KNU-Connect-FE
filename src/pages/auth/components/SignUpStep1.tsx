@@ -9,7 +9,7 @@ import {
   VerificationInputWrapper,
   VerificationTimer,
 } from './signUpStyles';
-import { useSignUpStep1 } from '@/hooks/auth';
+import { useSignUpStep1 } from '../hooks';
 
 interface SignUpStep1Props {
   onNext: () => void;

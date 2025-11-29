@@ -1,5 +1,8 @@
 import styled from '@emotion/styled';
-import { FieldLabel, MentorDescription } from '@/components/auth/signUpStyles';
+import {
+  FieldLabel,
+  MentorDescription,
+} from '@/pages/auth/components/signUpStyles';
 import { TextField } from '@/components/common';
 
 type ProfileIntroSectionProps = {

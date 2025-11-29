@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
-import { useLogin } from '@/api';
+import { useLogin } from '../services/login';
 import { ROUTES } from '@/routes/paths';
 import { TEST_CREDENTIALS } from '@/config/authConfig';
 import { LOGIN_REDIRECT_DELAY, MODAL_AUTO_CLOSE_DELAY } from '@/constants';
