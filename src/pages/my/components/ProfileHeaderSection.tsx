@@ -154,9 +154,9 @@ export const ProfileHeaderSection = ({
   const mbtiLabel = getMbtiLabel(mbti);
 
   const profileTags: TagInfo[] = [
-    { text: interestLabel, color: getTagColor(interestLabel) },
-    { text: careerLabel, color: getTagColor(careerLabel) },
-    { text: mbtiLabel, color: getTagColor(mbtiLabel) },
+    { text: interestLabel, color: theme.colors.tag.purple },
+    { text: careerLabel, color: theme.colors.tag.blue },
+    { text: mbtiLabel, color: theme.colors.tag.gold },
   ];
 
   return (
