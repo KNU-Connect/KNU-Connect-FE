@@ -99,15 +99,14 @@ export const VerificationTimer = styled.span`
 export const FieldLabel = styled.p`
   ${({ theme }) => theme.typography.body2};
   font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
-  margin-top: ${({ theme }) => theme.spacing[3]};
-  margin-bottom: ${({ theme }) => theme.spacing[2]};
+  margin-top: ${({ theme }) => theme.spacing[2]};
+  margin-bottom: ${({ theme }) => theme.spacing[1]};
   color: ${({ theme }) => theme.colors.text.default};
 `;
 
 export const MentorDescription = styled.p`
   ${({ theme }) => theme.typography.body2};
   font-size: 0.8125rem;
-  margin-top: ${({ theme }) => theme.spacing[1]};
   margin-bottom: ${({ theme }) => theme.spacing[2]};
   color: ${({ theme }) => theme.colors.text.sub};
   line-height: 1.4;

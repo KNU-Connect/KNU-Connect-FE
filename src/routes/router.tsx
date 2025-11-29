@@ -8,6 +8,7 @@ import {
   LoginPage,
   MentorPage,
   MyPage,
+  MyPostsPage,
   SignUpPage,
   NetworkingDetailPage,
   NetworkingCreatePage,
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
       {
         path: ROUTES.MY,
         element: <MyPage />,
+      },
+      {
+        path: ROUTES.MY_POSTS,
+        element: <MyPostsPage />,
       },
       {
         path: ROUTES.NETWORKING_DETAIL,
