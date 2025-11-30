@@ -1,5 +1,6 @@
 import axiosInstance from '@/api/axiosInstance';
 import { API_ENDPOINTS } from '@/constants';
+import type { ChatParticipant } from '@/types/chat';
 
 export interface CreateNetworkingRequestBody {
   title: string;
@@ -31,6 +32,20 @@ export async function createNetworking({
     {
       params: chatRoomId ? { chat_room_id: chatRoomId } : undefined,
     },
+  );
+
+  return data;
+}
+
+/**
+ * 채팅방 참여자 목록 조회
+ * GET /api/chat-rooms/{chat_room_id}/participants
+ */
+export async function getChatRoomParticipants(
+  chatRoomId: number,
+): Promise<ChatParticipant[]> {
+  const { data } = await axiosInstance.get<ChatParticipant[]>(
+    API_ENDPOINTS.CHAT_ROOM_PARTICIPANTS(chatRoomId),
   );
 
   return data;

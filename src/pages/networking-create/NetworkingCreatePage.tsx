@@ -1,7 +1,10 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { APP_WIDTH } from '@/constants/number';
+import { chatQueryKeys } from '@/constants/queryKeys';
+import type { ChatParticipant } from '@/types/chat';
 import { useCreateNetworking } from './hooks/useCreateNetworking';
 import {
   NetworkingCreateHeader,
@@ -10,6 +13,7 @@ import {
   ParticipantCount,
   RepresentativeList,
 } from './components';
+import { getChatRoomParticipants } from './services/networking';
 
 const NetworkingCreatePage = () => {
   const navigate = useNavigate();
@@ -21,6 +25,41 @@ const NetworkingCreatePage = () => {
   const [selectedRepresentativeId, setSelectedRepresentativeId] = useState<
     number | null
   >(null);
+
+  const chatRoomId = useMemo(() => {
+    if (!chatId || chatId === 'new') return undefined;
+    const parsed = Number(chatId);
+    if (!Number.isFinite(parsed) || parsed <= 0) {
+      return undefined;
+    }
+    return parsed;
+  }, [chatId]);
+
+  const participantsQueryKey = chatRoomId
+    ? chatQueryKeys.participants(chatRoomId)
+    : ([...chatQueryKeys.all, 'participants', 'new'] as const);
+
+  const {
+    data: participants = [],
+    isLoading: isParticipantsLoading,
+    isError: isParticipantsError,
+    refetch: refetchParticipants,
+  } = useQuery<ChatParticipant[]>({
+    queryKey: participantsQueryKey,
+    queryFn: () => getChatRoomParticipants(chatRoomId as number),
+    enabled: !!chatRoomId,
+  });
+
+  useEffect(() => {
+    if (
+      selectedRepresentativeId &&
+      !participants.some(
+        (participant) => participant.userId === selectedRepresentativeId,
+      )
+    ) {
+      setSelectedRepresentativeId(null);
+    }
+  }, [participants, selectedRepresentativeId]);
 
   const handleComplete = async () => {
     if (!title || !selectedRepresentativeId) return;
@@ -35,7 +74,7 @@ const NetworkingCreatePage = () => {
           maxNumber: participantCount,
           representativeId: selectedRepresentativeId,
         },
-        chatRoomId: chatId ? Number(chatId) : undefined,
+        chatRoomId,
       });
       navigate(-1);
     } catch (error) {
@@ -73,6 +112,11 @@ const NetworkingCreatePage = () => {
           onDecrease={handleDecreaseCount}
         />
         <RepresentativeList
+          participants={participants}
+          isLoading={isParticipantsLoading}
+          isError={isParticipantsError}
+          isChatRoomAvailable={!!chatRoomId}
+          onRetry={refetchParticipants}
           selectedId={selectedRepresentativeId}
           onSelect={setSelectedRepresentativeId}
         />

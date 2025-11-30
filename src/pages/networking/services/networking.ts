@@ -10,6 +10,7 @@ export interface NetworkingDetailResponse {
   maxNumber: number;
   isParticipating: boolean;
   createdAt: string;
+  chatRoomId?: number;
   representative: {
     name: string;
     status: string; // 'student' | 'graduate' | 'professor'
