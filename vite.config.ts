@@ -16,8 +16,20 @@ export default defineConfig(({ mode }) => {
         '@': path.resolve(__dirname, './src'),
       },
     },
+    define: {
+      global: 'window',
+    },
     server: {
       proxy: {
+        '/ws': {
+          target: env.VITE_API_PROXY_TARGET,
+          changeOrigin: true,
+          ws: true,
+          secure: false,
+          headers: {
+            Origin: env.VITE_API_PROXY_TARGET,
+          },
+        },
         '/api': {
           target: env.VITE_API_PROXY_TARGET,
           changeOrigin: true,
