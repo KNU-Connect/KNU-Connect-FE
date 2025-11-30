@@ -89,7 +89,6 @@ export default function LoginPage() {
     showResultModal,
     isLoginError,
     onSubmit,
-    handleTestLogin,
     handleModalClose,
   } = useLoginForm();
 
@@ -151,9 +150,6 @@ export default function LoginPage() {
           <LoginButtonGroup>
             <MainButton type='button' onClick={handleSignUpClick}>
               회원가입
-            </MainButton>
-            <MainButton type='button' onClick={handleTestLogin}>
-              테스트 계정으로 로그인
             </MainButton>
           </LoginButtonGroup>
         </LoginFormContainer>
