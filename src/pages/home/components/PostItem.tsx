@@ -21,16 +21,18 @@ export const PostItem = ({ post }: PostItemProps) => {
       <PostContent>
         <TitleContainer>
           <PostTitle>{post.title}</PostTitle>
-          {post.isParticipating && (
-            <ParticipatingBadge>해당 채팅방에 참여중입니다.</ParticipatingBadge>
-          )}
         </TitleContainer>
         <PostDescription>{post.description.split('\n')[0]}</PostDescription>
         <PostMeta>
-          <Participants>
-            {post.currentParticipants} / {post.maxParticipants}명
-          </Participants>
-          <Date>{post.date}</Date>
+          <Wrapper>
+            <Participants>
+              {post.currentParticipants} / {post.maxParticipants}명
+            </Participants>
+            <Date>{post.date}</Date>
+          </Wrapper>
+          {post.isParticipating && (
+            <ParticipatingBadge>해당 채팅방에 참여중입니다.</ParticipatingBadge>
+          )}
         </PostMeta>
       </PostContent>
       <JoinButton onClick={handleJoinClick}>게시글 상세보기</JoinButton>
@@ -85,6 +87,7 @@ const ParticipatingBadge = styled.span`
   line-height: ${({ theme }) => theme.typography.body3.lineHeight};
   color: ${({ theme }) => theme.colors.primary};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
+  flex-shrink: 0;
 `;
 
 const PostDescription = styled.p`
@@ -98,8 +101,15 @@ const PostDescription = styled.p`
 const PostMeta = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: ${({ theme }) => theme.spacing[3]};
   margin-top: ${({ theme }) => theme.spacing[1]};
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing[3]};
 `;
 
 const Participants = styled.span`
