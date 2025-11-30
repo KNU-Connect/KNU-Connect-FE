@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
-import { SearchBar, InfoInputButton, PostList } from './components';
+import { SearchBar, PostList } from './components';
 import { useNetworkingList } from './hooks/useNetworkingList';
 import { convertBoardToPost } from './services/networking';
 import { HEADER_HEIGHT, NAV_HEIGHT } from '@/constants';
@@ -40,7 +40,6 @@ const HomePage = () => {
   return (
     <Container>
       <SearchBar onSearch={handleSearch} />
-      <InfoInputButton />
       {isLoading && <LoadingText>로딩 중...</LoadingText>}
       {error && (
         <ErrorText>게시물을 불러오는 중 오류가 발생했습니다.</ErrorText>
