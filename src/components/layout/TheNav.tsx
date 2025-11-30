@@ -61,4 +61,5 @@ const Container = styled.nav`
   bottom: 0;
   z-index: 1;
   background-color: ${({ theme }) => theme.colors.gray[0]};
+  border-top: 1px solid ${({ theme }) => theme.colors.gray[30]};
 `;
