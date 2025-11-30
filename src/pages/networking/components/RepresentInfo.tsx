@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import { User } from 'lucide-react';
 import { getTagColor } from '@/utils';
 import { Tag } from '@/components/common';
+import { formatMbtiLabel } from '@/utils/networking/participantLabels';
 
 export const RepresentInfo = ({ post }: { post: NetworkingPost }) => {
   const theme = useTheme();
@@ -20,7 +21,11 @@ export const RepresentInfo = ({ post }: { post: NetworkingPost }) => {
           <Affiliation>{post.representative.affiliation}</Affiliation>
           <Tags>
             {post.representative.tags.map((tag, index) => (
-              <Tag key={index} tag={tag} color={getTagColor(tag, theme)} />
+              <Tag
+                key={index}
+                tag={formatMbtiLabel(tag)}
+                color={getTagColor(tag, theme)}
+              />
             ))}
           </Tags>
           <Bio>{post.representative.bio}</Bio>
