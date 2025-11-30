@@ -9,6 +9,7 @@ import { ProfileIntroSection } from '@/pages/my/components/ProfileIntroSection';
 import { MainButton, PageSpinner, ErrorBoundary } from '@/components/common';
 import { useMentorDetail } from './hooks/useMentorDetail';
 import { useCreateChatRoom } from './hooks/useCreateChatRoom';
+import { CreateChatRoomModal } from './components/CreateChatRoomModal';
 
 const Container = styled.div`
   display: flex;
@@ -89,26 +90,35 @@ const MentorDetailPageContent = () => {
   const createChatRoomMutation = useCreateChatRoom();
 
   const [isOwnProfile, setIsOwnProfile] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleBack = () => {
     navigate(-1);
   };
 
-  const handleSendMessage = async () => {
+  const handleSendMessageClick = () => {
+    if (!mentor || isOwnProfile) return;
+    setIsModalOpen(true);
+  };
+
+  const handleCreateChatRoom = async () => {
     if (!mentor || isOwnProfile) return;
 
     try {
       await createChatRoomMutation.mutateAsync({
         participant_id: mentor.mentorId,
       });
+      setIsModalOpen(false);
     } catch (error) {
       const statusCode =
         error instanceof AxiosError ? error.response?.status : undefined;
       if (statusCode === 400) {
         setIsOwnProfile(true);
+        setIsModalOpen(false);
         return;
       }
       toast.error('채팅방 생성에 실패했습니다. 다시 시도해주세요.');
+      setIsModalOpen(false);
     }
   };
 
@@ -157,7 +167,7 @@ const MentorDetailPageContent = () => {
         />
 
         <SendMessageButton
-          onClick={handleSendMessage}
+          onClick={handleSendMessageClick}
           disabled={isOwnProfile || createChatRoomMutation.isPending}
           $isDisabled={isOwnProfile}
         >
@@ -167,6 +177,12 @@ const MentorDetailPageContent = () => {
           <DisabledMessage>자신에게 메시지를 보낼 수 없습니다.</DisabledMessage>
         )}
       </Content>
+      <CreateChatRoomModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleCreateChatRoom}
+        isPending={createChatRoomMutation.isPending}
+      />
     </Container>
   );
 };
