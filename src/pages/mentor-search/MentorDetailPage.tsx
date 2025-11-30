@@ -128,6 +128,7 @@ const MentorDetailPage = () => {
           isMentor={true}
           shortIntro={mentor.introduction || ''}
           detailIntro={mentor.detail_introduction || ''}
+          isMentorView={true}
         />
 
         <SendMessageButton
