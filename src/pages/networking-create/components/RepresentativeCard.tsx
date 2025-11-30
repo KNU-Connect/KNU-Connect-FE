@@ -25,8 +25,19 @@ export const RepresentativeCard = ({
     career: theme.colors.tag.blue,
     mbti: theme.colors.tag.gold,
   });
-  const affiliation =
-    mapDepartmentLabel(participant.department) || '소속 정보 없음';
+
+  let affiliation = mapDepartmentLabel(participant.department);
+  if (participant.status === 'student') {
+    affiliation = `${mapDepartmentLabel(participant.department)} 학생`;
+  } else if (participant.status === 'graduate') {
+    affiliation = `${mapDepartmentLabel(participant.department)} 졸업생`;
+  } else if (participant.status === 'postgraduate') {
+    affiliation = `${mapDepartmentLabel(participant.department)} 대학원생`;
+  } else if (participant.status === 'professor') {
+    affiliation = `${mapDepartmentLabel(participant.department)} 교수`;
+  } else {
+    affiliation = participant.department;
+  }
 
   return (
     <Container $isSelected={isSelected} onClick={onSelect}>

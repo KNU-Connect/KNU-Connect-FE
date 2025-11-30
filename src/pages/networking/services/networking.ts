@@ -56,7 +56,11 @@ export function convertDetailToPost(
   if (detail.representative.status === 'student') {
     affiliation = `${departmentName} 학생`;
   } else if (detail.representative.status === 'graduate') {
+    affiliation = `${departmentName} 졸업생`;
+  } else if (detail.representative.status === 'postgraduate') {
     affiliation = `${departmentName} 대학원생`;
+  } else if (detail.representative.status === 'professor') {
+    affiliation = `${departmentName} 교수`;
   } else {
     affiliation = departmentName;
   }
