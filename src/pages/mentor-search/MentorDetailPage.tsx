@@ -1,14 +1,14 @@
 import styled from '@emotion/styled';
+import { Suspense, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { toast } from 'react-toastify';
+import { AxiosError } from 'axios';
 import { ProfileHeaderSection } from '@/pages/my/components/ProfileHeaderSection';
 import { ProfileIntroSection } from '@/pages/my/components/ProfileIntroSection';
-import { MainButton } from '@/components/common';
+import { MainButton, PageSpinner, ErrorBoundary } from '@/components/common';
 import { useMentorDetail } from './hooks/useMentorDetail';
 import { useCreateChatRoom } from './hooks/useCreateChatRoom';
-import { PageSpinner } from '@/components/common';
-import { useUserProfile } from '@/pages/my/hooks/useUserProfile';
 
 const Container = styled.div`
   display: flex;
@@ -80,30 +80,34 @@ const ErrorText = styled.div`
   font-size: ${({ theme }) => theme.typography.body1.fontSize};
 `;
 
-const MentorDetailPage = () => {
+const MentorDetailPageContent = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const mentorId = id ? Number(id) : 0;
 
   const { data: mentor, isLoading, error } = useMentorDetail(mentorId);
-  const { data: currentUser } = useUserProfile();
   const createChatRoomMutation = useCreateChatRoom();
 
-  const isOwnProfile =
-    currentUser?.id !== undefined && mentor?.mentorId === currentUser.id;
+  const [isOwnProfile, setIsOwnProfile] = useState(false);
 
   const handleBack = () => {
     navigate(-1);
   };
 
   const handleSendMessage = async () => {
-    if (!mentor) return;
+    if (!mentor || isOwnProfile) return;
 
     try {
       await createChatRoomMutation.mutateAsync({
         participant_id: mentor.mentorId,
       });
     } catch (error) {
+      const statusCode =
+        error instanceof AxiosError ? error.response?.status : undefined;
+      if (statusCode === 400) {
+        setIsOwnProfile(true);
+        return;
+      }
       toast.error('채팅방 생성에 실패했습니다. 다시 시도해주세요.');
     }
   };
@@ -164,6 +168,16 @@ const MentorDetailPage = () => {
         )}
       </Content>
     </Container>
+  );
+};
+
+const MentorDetailPage = () => {
+  return (
+    <ErrorBoundary>
+      <Suspense fallback={<PageSpinner />}>
+        <MentorDetailPageContent />
+      </Suspense>
+    </ErrorBoundary>
   );
 };
 
