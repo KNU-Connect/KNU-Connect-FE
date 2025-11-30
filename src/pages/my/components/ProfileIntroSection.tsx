@@ -10,8 +10,9 @@ type ProfileIntroSectionProps = {
   isMentor: boolean;
   shortIntro: string;
   detailIntro: string;
-  onChangeShortIntro: (value: string) => void;
-  onChangeDetailIntro: (value: string) => void;
+  onChangeShortIntro?: (value: string) => void;
+  onChangeDetailIntro?: (value: string) => void;
+  showMentorStatus?: boolean;
 };
 
 const ShortIntro = styled.div`
@@ -70,17 +71,22 @@ export const ProfileIntroSection = ({
   detailIntro,
   onChangeShortIntro,
   onChangeDetailIntro,
+  showMentorStatus = true,
 }: ProfileIntroSectionProps) => {
   if (!isEditMode) {
     return (
       <>
-        <FieldLabel>멘토 활동 여부</FieldLabel>
-        <MentorDescription>
-          멘토로 활동 중인 유저도 멘티로 참여할 수 있습니다.
-        </MentorDescription>
-        <ShortIntro>
-          {isMentor ? '멘토, 멘티로 활동 중' : '멘티로 활동 중.'}
-        </ShortIntro>
+        {showMentorStatus && (
+          <>
+            <FieldLabel>멘토 활동 여부</FieldLabel>
+            <MentorDescription>
+              멘토로 활동 중인 유저도 멘티로 참여할 수 있습니다.
+            </MentorDescription>
+            <ShortIntro>
+              {isMentor ? '멘토, 멘티로 활동 중' : '멘티로 활동 중.'}
+            </ShortIntro>
+          </>
+        )}
 
         <FieldLabel>한줄 소개</FieldLabel>
         <ShortIntro>{shortIntro}</ShortIntro>
@@ -99,14 +105,14 @@ export const ProfileIntroSection = ({
       <FieldLabel>한줄 소개</FieldLabel>
       <TextField
         value={shortIntro}
-        onChange={(event) => onChangeShortIntro(event.target.value)}
+        onChange={(event) => onChangeShortIntro?.(event.target.value)}
         placeholder='한줄 소개를 입력해주세요'
       />
 
       <FieldLabel>상세 소개</FieldLabel>
       <DetailIntroTextArea
         value={detailIntro}
-        onChange={(event) => onChangeDetailIntro(event.target.value)}
+        onChange={(event) => onChangeDetailIntro?.(event.target.value)}
         placeholder='상세 소개를 입력해주세요'
         style={{ minHeight: '150px' }}
       />

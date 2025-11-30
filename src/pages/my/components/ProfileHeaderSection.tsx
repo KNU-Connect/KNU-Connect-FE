@@ -25,12 +25,12 @@ type ProfileHeaderSectionProps = {
   interest: string;
   mbti: string;
   isMentor: boolean;
-  onChangeStatus: (status: string) => void;
-  onChangeDepartment: (department: string) => void;
-  onChangeCareer: (career: string) => void;
-  onChangeInterest: (interest: string) => void;
-  onChangeMbti: (mbti: string) => void;
-  onChangeIsMentor: (isMentor: boolean) => void;
+  onChangeStatus?: (status: string) => void;
+  onChangeDepartment?: (department: string) => void;
+  onChangeCareer?: (career: string) => void;
+  onChangeInterest?: (interest: string) => void;
+  onChangeMbti?: (mbti: string) => void;
+  onChangeIsMentor?: (isMentor: boolean) => void;
 };
 
 const ProfileSection = styled.section`
@@ -176,7 +176,7 @@ export const ProfileHeaderSection = ({
                   value,
                   label: getStatusLabel(value),
                 }))}
-                onChange={onChangeStatus}
+                onChange={onChangeStatus || (() => {})}
                 isStatusType
               />
             </>
@@ -193,7 +193,7 @@ export const ProfileHeaderSection = ({
                   value,
                   label: getDepartmentLabel(value),
                 }))}
-                onChange={onChangeDepartment}
+                onChange={onChangeDepartment || (() => {})}
                 isStatusType
               />
             </>
@@ -209,7 +209,7 @@ export const ProfileHeaderSection = ({
                   value,
                   label: getInterestLabel(value),
                 }))}
-                onChange={onChangeInterest}
+                onChange={onChangeInterest || (() => {})}
                 color={getTagColor('프론트엔드')}
               />
               <CustomDropdown
@@ -218,7 +218,7 @@ export const ProfileHeaderSection = ({
                   value,
                   label: getCareerLabel(value),
                 }))}
-                onChange={onChangeCareer}
+                onChange={onChangeCareer || (() => {})}
                 color={getTagColor('취업')}
               />
               <CustomDropdown
@@ -227,7 +227,7 @@ export const ProfileHeaderSection = ({
                   value,
                   label: getMbtiLabel(value),
                 }))}
-                onChange={onChangeMbti}
+                onChange={onChangeMbti || (() => {})}
                 color={getTagColor('#INTJ')}
               />
             </TagList>
@@ -254,14 +254,14 @@ export const ProfileHeaderSection = ({
             <MentorToggleButton
               type='button'
               isActive={isMentor}
-              onClick={() => onChangeIsMentor(true)}
+              onClick={() => onChangeIsMentor?.(true)}
             >
               네
             </MentorToggleButton>
             <MentorToggleButton
               type='button'
               isActive={!isMentor}
-              onClick={() => onChangeIsMentor(false)}
+              onClick={() => onChangeIsMentor?.(false)}
             >
               아니오
             </MentorToggleButton>
