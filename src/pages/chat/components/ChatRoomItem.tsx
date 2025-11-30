@@ -79,16 +79,13 @@ const ChatItem = styled.div`
   display: flex;
   align-items: center;
   padding: ${({ theme }) => theme.spacing[4]} ${({ theme }) => theme.spacing[6]};
-  border-bottom: 1px solid ${({ theme }) => theme.colors.gray[30]};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray[40]};
   gap: ${({ theme }) => theme.spacing[4]};
   cursor: pointer;
   transition: background-color 0.2s;
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.gray[20]};
-  }
-  &:last-child {
-    border-bottom: none;
   }
 `;
 

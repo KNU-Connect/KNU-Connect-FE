@@ -2,8 +2,6 @@ import styled from '@emotion/styled';
 import { useEffect, useRef } from 'react';
 import type { NetworkingPost } from '@/types/networking';
 import { PostItem } from './PostItem';
-import { Link } from 'react-router-dom';
-import { ROUTES } from '@/routes';
 
 type PostListProps = {
   posts: NetworkingPost[];
@@ -45,12 +43,7 @@ export const PostList = ({
   return (
     <Container>
       {posts.map((post) => (
-        <Link
-          to={ROUTES.NETWORKING_DETAIL.replace(':id', post.id.toString())}
-          key={post.id}
-        >
-          <PostItem post={post} />
-        </Link>
+        <PostItem key={post.id} post={post} />
       ))}
 
       {hasNextPage && (

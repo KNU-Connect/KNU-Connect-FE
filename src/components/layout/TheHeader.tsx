@@ -25,6 +25,7 @@ const Container = styled.header`
   top: 0;
   z-index: 1;
   background-color: ${({ theme }) => theme.colors.gray[0]};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.gray[30]};
 `;
 
 const Title = styled.h1`

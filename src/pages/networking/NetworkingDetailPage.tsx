@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { useState } from 'react';
 import { useTheme } from '@emotion/react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -17,6 +18,7 @@ import {
   mapDepartmentLabel,
 } from '@/utils/networking';
 import { ROUTES } from '@/routes';
+import { JoinChatRoomModal } from './components/JoinChatRoomModal';
 
 const NetworkingDetailPage = () => {
   const navigate = useNavigate();
@@ -27,6 +29,7 @@ const NetworkingDetailPage = () => {
   const { data, isLoading, error } = useNetworkingDetail(networkingId);
   const { mutate: participate, isPending } = useParticipateNetworking();
   const chatRoomId = data?.chatRoomId ?? undefined;
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const participantsQueryKey = chatRoomId
     ? chatQueryKeys.participants(chatRoomId)
@@ -42,14 +45,26 @@ const NetworkingDetailPage = () => {
     enabled: !!chatRoomId,
   });
 
+  const handleJoinClick = () => {
+    if (
+      post.isParticipating ||
+      post.currentParticipants >= post.maxParticipants
+    ) {
+      return;
+    }
+    setIsModalOpen(true);
+  };
+
   const handleJoin = () => {
     participate(
       { networkingId: post.id },
       {
         onSuccess: () => {
+          setIsModalOpen(false);
           navigate(ROUTES.CHAT);
         },
         onError: () => {
+          setIsModalOpen(false);
           alert('네트워킹 참여에 실패했습니다. 다시 시도해주세요.');
         },
       },
@@ -140,7 +155,7 @@ const NetworkingDetailPage = () => {
           </ParticipantSection>
         )}
         <JoinButton
-          onClick={handleJoin}
+          onClick={handleJoinClick}
           disabled={
             isPending ||
             post.isParticipating ||
@@ -150,12 +165,18 @@ const NetworkingDetailPage = () => {
           {isPending
             ? '참여 중...'
             : post.isParticipating
-              ? '참여중인 네트워킹입니다'
+              ? '참여중인 채팅방입니다'
               : post.currentParticipants >= post.maxParticipants
-                ? '가득 찬 네트워킹입니다'
+                ? '정원이 초과된 채팅방입니다'
                 : '그룹채팅방 참여하기'}
         </JoinButton>
       </Content>
+      <JoinChatRoomModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleJoin}
+        isPending={isPending}
+      />
     </Container>
   );
 };
