@@ -41,7 +41,7 @@ const Input = styled.input`
 
 const Icon = styled.div`
   position: absolute;
-  right: ${({ theme }) => theme.spacing[9]};
+  right: ${({ theme }) => theme.spacing[4]};
   top: 50%;
   transform: translateY(-50%);
   color: ${({ theme }) => theme.colors.text.sub};
