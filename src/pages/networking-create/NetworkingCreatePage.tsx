@@ -62,7 +62,7 @@ const NetworkingCreatePage = () => {
     if (!userProfile) return undefined;
 
     return {
-      userId: 1,
+      userId: userProfile.id,
       name: userProfile.name,
       department: userProfile.department,
       career: userProfile.career,
