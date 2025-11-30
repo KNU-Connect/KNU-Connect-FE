@@ -69,6 +69,8 @@ const Container = styled.div`
   padding: ${({ theme }) => theme.spacing[4]} 0;
   gap: ${({ theme }) => theme.spacing[4]};
   min-height: calc(100dvh - ${HEADER_HEIGHT}px - ${NAV_HEIGHT}px);
+  max-width: 600px;
+  margin: 0 auto;
 `;
 
 const LoadingText = styled.div`
@@ -86,10 +88,10 @@ const ErrorText = styled.div`
 `;
 
 const FloatingActionButton = styled.button`
-  position: sticky;
-  align-self: flex-end;
-  margin-right: ${({ theme }) => theme.spacing[4]};
-  bottom: calc(${NAV_HEIGHT}px + ${({ theme }) => theme.spacing[4]});
+  position: fixed;
+  /* 기본: 화면 중앙을 기준으로, 중앙 컨테이너(max-width:600px)의 오른쪽 안쪽에 위치시키기 */
+  left: calc(50% + 300px - 56px - ${({ theme }) => theme.spacing[4]});
+  bottom: calc(${({ theme }) => theme.spacing[4]} + ${NAV_HEIGHT}px);
   width: 56px;
   height: 56px;
   background-color: ${({ theme }) => theme.colors.primary};
@@ -100,4 +102,10 @@ const FloatingActionButton = styled.button`
   justify-content: center;
   cursor: pointer;
   z-index: 10;
+
+  /* 화면이 좁아져서 중앙 컨테이너가 화면 너비에 맞춰질 때는 오른쪽 고정 */
+  @media (max-width: 600px) {
+    left: auto;
+    right: ${({ theme }) => theme.spacing[4]};
+  }
 `;
