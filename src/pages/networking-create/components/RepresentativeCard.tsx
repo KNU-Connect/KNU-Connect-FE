@@ -1,22 +1,32 @@
 import styled from '@emotion/styled';
 import { User } from 'lucide-react';
 import { useTheme } from '@emotion/react';
-import type { Representative } from '@/data/mockRepresentatives';
-import { getTagColor } from '@/utils';
+import type { ChatParticipant } from '@/types/chat';
 import { Tag } from '@/components/common';
+import {
+  buildParticipantTagItems,
+  mapDepartmentLabel,
+} from '@/utils/networking';
 
 type RepresentativeCardProps = {
-  representative: Representative;
+  participant: ChatParticipant;
   isSelected: boolean;
   onSelect: () => void;
 };
 
 export const RepresentativeCard = ({
-  representative,
+  participant,
   isSelected,
   onSelect,
 }: RepresentativeCardProps) => {
   const theme = useTheme();
+  const tagItems = buildParticipantTagItems(participant, {
+    interest: theme.colors.tag.purple,
+    career: theme.colors.tag.blue,
+    mbti: theme.colors.tag.gold,
+  });
+  const affiliation =
+    mapDepartmentLabel(participant.department) || '소속 정보 없음';
 
   return (
     <Container $isSelected={isSelected} onClick={onSelect}>
@@ -28,14 +38,16 @@ export const RepresentativeCard = ({
           <User size={40} />
         </ProfileImage>
         <Info>
-          <Name>{representative.name}</Name>
-          <Affiliation>{representative.affiliation}</Affiliation>
-          <Tags>
-            {representative.tags.map((tag, index) => (
-              <Tag key={index} tag={tag} color={getTagColor(tag, theme)} />
-            ))}
-          </Tags>
-          <Bio>{representative.bio}</Bio>
+          <Name>{participant.name}</Name>
+          <Affiliation>{affiliation}</Affiliation>
+          {tagItems.length > 0 && (
+            <Tags>
+              {tagItems.map((tag) => (
+                <Tag key={tag.label} tag={tag.label} color={tag.color} />
+              ))}
+            </Tags>
+          )}
+          {participant.introduction && <Bio>{participant.introduction}</Bio>}
         </Info>
       </Box>
     </Container>

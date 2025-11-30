@@ -1,3 +1,13 @@
+export type ChatParticipant = {
+  userId: number;
+  name: string;
+  department: string;
+  career: string;
+  interest: string;
+  mbti: string;
+  introduction?: string | null;
+};
+
 export type ChatRoom = {
   id: number;
   type: 'individual' | 'group';

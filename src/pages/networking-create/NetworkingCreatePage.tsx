@@ -1,7 +1,10 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { APP_WIDTH } from '@/constants/number';
+import { chatQueryKeys } from '@/constants/queryKeys';
+import type { ChatParticipant } from '@/types/chat';
 import { useCreateNetworking } from './hooks/useCreateNetworking';
 import {
   NetworkingCreateHeader,
@@ -10,6 +13,8 @@ import {
   ParticipantCount,
   RepresentativeList,
 } from './components';
+import { getChatRoomParticipants } from './services/networking';
+import { useUserProfile } from '../my/hooks/useUserProfile';
 
 const NetworkingCreatePage = () => {
   const navigate = useNavigate();
@@ -21,6 +26,97 @@ const NetworkingCreatePage = () => {
   const [selectedRepresentativeId, setSelectedRepresentativeId] = useState<
     number | null
   >(null);
+
+  const chatRoomId = useMemo(() => {
+    if (!chatId || chatId === 'new') return undefined;
+    const parsed = Number(chatId);
+    if (!Number.isFinite(parsed) || parsed <= 0) {
+      return undefined;
+    }
+    return parsed;
+  }, [chatId]);
+
+  const participantsQueryKey = chatRoomId
+    ? chatQueryKeys.participants(chatRoomId)
+    : ([...chatQueryKeys.all, 'participants', 'new'] as const);
+
+  const {
+    data: participants = [],
+    isLoading: isParticipantsLoading,
+    isError: isParticipantsError,
+    refetch: refetchParticipants,
+  } = useQuery<ChatParticipant[]>({
+    queryKey: participantsQueryKey,
+    queryFn: () => getChatRoomParticipants(chatRoomId as number),
+    enabled: !!chatRoomId,
+  });
+
+  const {
+    data: userProfile,
+    isLoading: isUserProfileLoading,
+    isError: isUserProfileError,
+    refetch: refetchUserProfile,
+  } = useUserProfile();
+
+  const userCandidate: ChatParticipant | undefined = useMemo(() => {
+    if (!userProfile) return undefined;
+
+    return {
+      userId: userProfile.id,
+      name: userProfile.name,
+      department: userProfile.department,
+      career: userProfile.career,
+      interest: userProfile.interest,
+      mbti: userProfile.mbti,
+      introduction: userProfile.introduction,
+    } satisfies ChatParticipant;
+  }, [userProfile]);
+
+  // 네트워킹 생성(new)일 때 내 정보가 있으면 자동으로 대표자 id 지정
+  useEffect(() => {
+    if (
+      chatId === 'new' &&
+      userCandidate &&
+      selectedRepresentativeId !== userCandidate.userId
+    ) {
+      setSelectedRepresentativeId(userCandidate.userId);
+    }
+  }, [chatId, userCandidate, selectedRepresentativeId]);
+
+  const candidateParticipants = useMemo(() => {
+    if (chatRoomId) {
+      return participants;
+    }
+
+    return userCandidate ? [userCandidate] : [];
+  }, [chatRoomId, participants, userCandidate]);
+
+  const minParticipantCount = Math.max(candidateParticipants.length, 1);
+
+  useEffect(() => {
+    setParticipantCount((prev) => Math.max(prev, minParticipantCount));
+  }, [minParticipantCount]);
+
+  useEffect(() => {
+    if (
+      selectedRepresentativeId &&
+      !candidateParticipants.some(
+        (participant) => participant.userId === selectedRepresentativeId,
+      )
+    ) {
+      setSelectedRepresentativeId(null);
+    }
+  }, [candidateParticipants, selectedRepresentativeId]);
+
+  const isCandidateLoading = chatRoomId
+    ? isParticipantsLoading
+    : isUserProfileLoading;
+  const isCandidateError = chatRoomId
+    ? isParticipantsError
+    : isUserProfileError;
+  const refetchCandidates = chatRoomId
+    ? refetchParticipants
+    : refetchUserProfile;
 
   const handleComplete = async () => {
     if (!title || !selectedRepresentativeId) return;
@@ -35,7 +131,7 @@ const NetworkingCreatePage = () => {
           maxNumber: participantCount,
           representativeId: selectedRepresentativeId,
         },
-        chatRoomId: chatId ? Number(chatId) : undefined,
+        chatRoomId,
       });
       navigate(-1);
     } catch (error) {
@@ -49,7 +145,7 @@ const NetworkingCreatePage = () => {
   };
 
   const handleDecreaseCount = () => {
-    if (participantCount > 1) {
+    if (participantCount > minParticipantCount) {
       setParticipantCount((prev) => prev - 1);
     }
   };
@@ -71,8 +167,17 @@ const NetworkingCreatePage = () => {
           count={participantCount}
           onIncrease={handleIncreaseCount}
           onDecrease={handleDecreaseCount}
+          min={minParticipantCount}
         />
         <RepresentativeList
+          participants={candidateParticipants}
+          isLoading={
+            chatId === 'new' ? isUserProfileLoading : isCandidateLoading
+          }
+          isError={isCandidateError}
+          isChatRoomAvailable={!!chatRoomId}
+          showChatRoomPrompt={!!chatRoomId}
+          onRetry={refetchCandidates}
           selectedId={selectedRepresentativeId}
           onSelect={setSelectedRepresentativeId}
         />

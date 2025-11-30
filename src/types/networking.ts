@@ -13,6 +13,7 @@ export type NetworkingPost = {
   currentParticipants: number;
   maxParticipants: number;
   date: string; // MM/DD 형식
+  isParticipating: boolean;
   representative: {
     name: string;
     affiliation: string;

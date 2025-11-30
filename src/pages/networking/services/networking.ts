@@ -8,7 +8,9 @@ export interface NetworkingDetailResponse {
   contents: string;
   curNumber: number;
   maxNumber: number;
+  isParticipating: boolean;
   createdAt: string;
+  chatRoomId?: number;
   representative: {
     name: string;
     status: string; // 'student' | 'graduate' | 'professor'
@@ -85,6 +87,7 @@ export function convertDetailToPost(
     description: detail.contents,
     currentParticipants: detail.curNumber,
     maxParticipants: detail.maxNumber,
+    isParticipating: detail.isParticipating,
     date: `${month}/${day}`,
     representative: {
       name: detail.representative.name,

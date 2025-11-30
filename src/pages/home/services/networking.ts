@@ -8,6 +8,7 @@ export interface NetworkingBoard {
   contents: string;
   curNumber: number;
   maxNumber: number;
+  isParticipating: boolean;
   createdAt: string;
 }
 
@@ -65,6 +66,7 @@ export function convertBoardToPost(board: NetworkingBoard): NetworkingPost {
     currentParticipants: board.curNumber,
     maxParticipants: board.maxNumber,
     date: `${month}/${day}`,
+    isParticipating: board.isParticipating,
     representative: {
       name: '',
       affiliation: '',

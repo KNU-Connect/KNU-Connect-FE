@@ -1,7 +1,7 @@
 import axiosInstance from '@/api/axiosInstance';
 
 export interface UserInfoResponse {
-  id?: number;
+  id: number;
   name: string;
   status: string;
   department: string;

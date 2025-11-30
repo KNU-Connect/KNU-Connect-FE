@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import type { InfiniteData } from '@tanstack/react-query';
@@ -22,6 +22,7 @@ import type {
 import { useChatRoomList } from '@/pages/chat/hooks/useChatRoomList';
 import type { GetChatRoomListResponse } from '@/pages/chat/services/chat';
 import type { SocketUnreadCount } from './services/chat';
+import { useGetRoomType } from './hooks/useGetRoomType';
 
 const ChatDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -29,6 +30,11 @@ const ChatDetailPage = () => {
   const queryClient = useQueryClient();
   const chatRoomId = id ? Number(id) : 0;
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const {
+    data: roomTypeData,
+    isLoading: isRoomTypeLoading,
+    error: roomTypeError,
+  } = useGetRoomType(chatRoomId);
 
   const {
     data,
@@ -135,14 +141,17 @@ const ChatDetailPage = () => {
 
   // 메시지 목록 변환 (오래된 메시지부터 최신 순으로 표시)
   // API는 cursor가 null일 때 최신 메시지부터 반환하므로, 전체를 역순으로 정렬
-  const messages =
-    data?.pages
-      .flatMap((page) =>
-        page.messages.map((msg) =>
-          convertMessageResponseToMessage(msg, page.user_id),
-        ),
-      )
-      .reverse() ?? [];
+  const messages = useMemo(() => {
+    return (
+      data?.pages
+        .flatMap((page) =>
+          page.messages.map((msg) =>
+            convertMessageResponseToMessage(msg, page.user_id),
+          ),
+        )
+        .reverse() ?? []
+    );
+  }, [data]);
 
   // 무한 스크롤을 위한 ref
   const messageListRef = useRef<HTMLDivElement>(null);
@@ -176,6 +185,33 @@ const ChatDetailPage = () => {
     };
   }, [hasNextPage, isFetchingNextPage, isLoading, fetchNextPage]);
 
+  // 이전 메시지 개수 저장용 ref
+  const prevMessagesLength = useRef(messages.length);
+  // 메시지 변경 시, 스크롤이 맨 아래에 있을 때만 자동으로 아래로 이동
+  useEffect(() => {
+    const container = messageListRef.current;
+    if (!container) return;
+
+    // 내가 메시지를 보냈을 때(메시지 개수가 늘어남 + 마지막 메시지의 sender가 나)
+    const lastMessage = messages[messages.length - 1];
+    const isMyMessage =
+      lastMessage && String(lastMessage.senderId) === String(currentUserId);
+
+    if (messages.length > prevMessagesLength.current && isMyMessage) {
+      container.scrollTop = container.scrollHeight;
+    } else {
+      // 기존 로직: 스크롤이 맨 아래에 있을 때만 자동 스크롤
+      const isAtBottom =
+        Math.abs(
+          container.scrollHeight - container.scrollTop - container.clientHeight,
+        ) < 2;
+      if (isAtBottom) {
+        container.scrollTop = container.scrollHeight;
+      }
+    }
+    prevMessagesLength.current = messages.length;
+  }, [messages, currentUserId]);
+
   const handleNetworkPostClick = () => {
     if (id) {
       navigate(ROUTES.NETWORKING_CREATE.replace(':chatId', id));
@@ -183,7 +219,7 @@ const ChatDetailPage = () => {
     setIsBottomSheetOpen(false);
   };
 
-  if (isLoading && !data) {
+  if (isLoading && !data && isRoomTypeLoading && !roomTypeData) {
     return (
       <Container>
         <LoadingMessage>로딩 중...</LoadingMessage>
@@ -191,7 +227,7 @@ const ChatDetailPage = () => {
     );
   }
 
-  if (error) {
+  if (error || !data || roomTypeError || !roomTypeData) {
     return (
       <Container>
         <ErrorMessage>채팅방을 찾을 수 없습니다.</ErrorMessage>
@@ -221,6 +257,8 @@ const ChatDetailPage = () => {
       <BottomSheet
         isOpen={isBottomSheetOpen}
         onNetworkPostClick={handleNetworkPostClick}
+        roomTypeData={roomTypeData}
+        networking_id={roomTypeData?.networking_id ?? -1}
       />
     </Container>
   );
