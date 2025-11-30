@@ -14,6 +14,7 @@ import {
   RepresentativeList,
 } from './components';
 import { getChatRoomParticipants } from './services/networking';
+import { useUserProfile } from '../my/hooks/useUserProfile';
 
 const NetworkingCreatePage = () => {
   const navigate = useNavigate();
@@ -50,22 +51,72 @@ const NetworkingCreatePage = () => {
     enabled: !!chatRoomId,
   });
 
+  const {
+    data: userProfile,
+    isLoading: isUserProfileLoading,
+    isError: isUserProfileError,
+    refetch: refetchUserProfile,
+  } = useUserProfile();
+
+  const userCandidate: ChatParticipant | undefined = useMemo(() => {
+    if (!userProfile) return undefined;
+
+    return {
+      userId: 1,
+      name: userProfile.name,
+      department: userProfile.department,
+      career: userProfile.career,
+      interest: userProfile.interest,
+      mbti: userProfile.mbti,
+      introduction: userProfile.introduction,
+    } satisfies ChatParticipant;
+  }, [userProfile]);
+
+  // 네트워킹 생성(new)일 때 내 정보가 있으면 자동으로 대표자 id 지정
+  useEffect(() => {
+    if (
+      chatId === 'new' &&
+      userCandidate &&
+      selectedRepresentativeId !== userCandidate.userId
+    ) {
+      setSelectedRepresentativeId(userCandidate.userId);
+    }
+  }, [chatId, userCandidate, selectedRepresentativeId]);
+
+  const candidateParticipants = useMemo(() => {
+    if (chatRoomId) {
+      return participants;
+    }
+
+    return userCandidate ? [userCandidate] : [];
+  }, [chatRoomId, participants, userCandidate]);
+
+  const minParticipantCount = Math.max(candidateParticipants.length, 1);
+
+  useEffect(() => {
+    setParticipantCount((prev) => Math.max(prev, minParticipantCount));
+  }, [minParticipantCount]);
+
   useEffect(() => {
     if (
       selectedRepresentativeId &&
-      !participants.some(
+      !candidateParticipants.some(
         (participant) => participant.userId === selectedRepresentativeId,
       )
     ) {
       setSelectedRepresentativeId(null);
     }
-  }, [participants, selectedRepresentativeId]);
+  }, [candidateParticipants, selectedRepresentativeId]);
 
-  const minParticipantCount = Math.max(participants.length, 1);
-
-  useEffect(() => {
-    setParticipantCount((prev) => Math.max(prev, minParticipantCount));
-  }, [minParticipantCount]);
+  const isCandidateLoading = chatRoomId
+    ? isParticipantsLoading
+    : isUserProfileLoading;
+  const isCandidateError = chatRoomId
+    ? isParticipantsError
+    : isUserProfileError;
+  const refetchCandidates = chatRoomId
+    ? refetchParticipants
+    : refetchUserProfile;
 
   const handleComplete = async () => {
     if (!title || !selectedRepresentativeId) return;
@@ -119,11 +170,14 @@ const NetworkingCreatePage = () => {
           min={minParticipantCount}
         />
         <RepresentativeList
-          participants={participants}
-          isLoading={isParticipantsLoading}
-          isError={isParticipantsError}
+          participants={candidateParticipants}
+          isLoading={
+            chatId === 'new' ? isUserProfileLoading : isCandidateLoading
+          }
+          isError={isCandidateError}
           isChatRoomAvailable={!!chatRoomId}
-          onRetry={refetchParticipants}
+          showChatRoomPrompt={!!chatRoomId}
+          onRetry={refetchCandidates}
           selectedId={selectedRepresentativeId}
           onSelect={setSelectedRepresentativeId}
         />

@@ -8,6 +8,7 @@ type RepresentativeListProps = {
   isLoading: boolean;
   isError: boolean;
   isChatRoomAvailable: boolean;
+  showChatRoomPrompt?: boolean;
   onRetry?: () => void | Promise<unknown>;
   selectedId: number | null;
   onSelect: (id: number) => void;
@@ -18,19 +19,14 @@ export const RepresentativeList = ({
   isLoading,
   isError,
   isChatRoomAvailable,
+  showChatRoomPrompt,
   onRetry,
   selectedId,
   onSelect,
 }: RepresentativeListProps) => {
   let content: ReactNode = null;
 
-  if (!isChatRoomAvailable) {
-    content = (
-      <Message>
-        채팅방에서 진입하면 참여자들을 대표자로 선택할 수 있어요.
-      </Message>
-    );
-  } else if (isLoading) {
+  if (isLoading) {
     content = <Message>참여자를 불러오는 중입니다.</Message>;
   } else if (isError) {
     content = (
@@ -39,9 +35,7 @@ export const RepresentativeList = ({
         {onRetry && <RetryButton onClick={onRetry}>다시 시도</RetryButton>}
       </Message>
     );
-  } else if (!participants.length) {
-    content = <Message>아직 채팅방 참여자가 없습니다.</Message>;
-  } else {
+  } else if (participants.length) {
     content = (
       <List>
         {participants.map((participant) => (
@@ -54,6 +48,14 @@ export const RepresentativeList = ({
         ))}
       </List>
     );
+  } else if (showChatRoomPrompt ?? isChatRoomAvailable) {
+    content = (
+      <Message>
+        채팅방에서 진입하면 참여자들을 대표자로 선택할 수 있어요.
+      </Message>
+    );
+  } else {
+    content = <Message>아직 채팅방 참여자가 없습니다.</Message>;
   }
 
   return (
