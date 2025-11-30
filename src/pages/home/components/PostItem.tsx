@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
-import type { NetworkingPost } from '@/types/networking';
-import { useParticipateNetworking } from '@/pages/networking/hooks/useParticipateNetworking';
 import { useNavigate } from 'react-router-dom';
+import type { NetworkingPost } from '@/types/networking';
 import { ROUTES } from '@/routes';
 
 type PostItemProps = {
@@ -9,29 +8,23 @@ type PostItemProps = {
 };
 
 export const PostItem = ({ post }: PostItemProps) => {
-  const { mutate: participate, isPending } = useParticipateNetworking();
   const navigate = useNavigate();
-  const handleJoin = (e: React.MouseEvent) => {
+
+  const handleJoinClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
-
-    participate(
-      { networkingId: post.id },
-      {
-        onSuccess: () => {
-          navigate(ROUTES.CHAT);
-        },
-        onError: () => {
-          alert('네트워킹 참여에 실패했습니다. 다시 시도해주세요.');
-        },
-      },
-    );
+    navigate(ROUTES.NETWORKING_DETAIL.replace(':id', post.id.toString()));
   };
 
   return (
     <Item>
       <PostContent>
-        <PostTitle>{post.title}</PostTitle>
+        <TitleContainer>
+          <PostTitle>{post.title}</PostTitle>
+          {post.isParticipating && (
+            <ParticipatingBadge>해당 채팅방에 참여중입니다.</ParticipatingBadge>
+          )}
+        </TitleContainer>
         <PostDescription>{post.description.split('\n')[0]}</PostDescription>
         <PostMeta>
           <Participants>
@@ -40,22 +33,7 @@ export const PostItem = ({ post }: PostItemProps) => {
           <Date>{post.date}</Date>
         </PostMeta>
       </PostContent>
-      <JoinButton
-        onClick={handleJoin}
-        disabled={
-          isPending ||
-          post.isParticipating ||
-          post.currentParticipants >= post.maxParticipants
-        }
-      >
-        {isPending
-          ? '참여 중...'
-          : post.isParticipating
-            ? '참여중인 네트워킹입니다'
-            : post.currentParticipants >= post.maxParticipants
-              ? '가득 찬 네트워킹입니다'
-              : '그룹채팅방 참여하기'}
-      </JoinButton>
+      <JoinButton onClick={handleJoinClick}>게시글 상세보기</JoinButton>
     </Item>
   );
 };
@@ -65,19 +43,9 @@ const Item = styled.div`
   flex-direction: column;
   padding: ${({ theme }) => theme.spacing[5]} ${({ theme }) => theme.spacing[6]};
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray[30]};
-  cursor: pointer;
-  transition: background-color 0.2s;
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.gray[10]};
-  }
-
-  &:active {
-    background-color: ${({ theme }) => theme.colors.gray[20]};
-  }
 
   &:last-child {
     border-bottom: none;
@@ -94,6 +62,14 @@ const PostContent = styled.div`
   box-sizing: border-box;
 `;
 
+const TitleContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing[2]};
+  flex-wrap: wrap;
+`;
+
 const PostTitle = styled.h3`
   font-size: ${({ theme }) => theme.typography.subtitle2.fontSize};
   line-height: ${({ theme }) => theme.typography.subtitle2.lineHeight};
@@ -101,6 +77,14 @@ const PostTitle = styled.h3`
   color: ${({ theme }) => theme.colors.text.default};
   word-break: break-word;
   overflow-wrap: break-word;
+  margin: 0;
+`;
+
+const ParticipatingBadge = styled.span`
+  font-size: ${({ theme }) => theme.typography.body3.fontSize};
+  line-height: ${({ theme }) => theme.typography.body3.lineHeight};
+  color: ${({ theme }) => theme.colors.primary};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
 `;
 
 const PostDescription = styled.p`
@@ -145,16 +129,11 @@ const JoinButton = styled.button`
   box-sizing: border-box;
   text-align: center;
 
-  &:hover:not(:disabled) {
+  &:hover {
     opacity: 0.9;
   }
 
-  &:active:not(:disabled) {
+  &:active {
     opacity: 0.8;
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
   }
 `;
