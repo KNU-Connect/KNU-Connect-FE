@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { useEffect, useRef } from 'react';
 import { MentorCard } from './MentorCard';
 import type { Mentor } from '../services/mentor';
 
@@ -15,24 +16,17 @@ const Container = styled.div`
   padding: ${({ theme }) => theme.spacing[4]} ${({ theme }) => theme.spacing[6]};
 `;
 
-const LoadMoreButton = styled.button`
-  padding: ${({ theme }) => theme.spacing[3]};
-  background-color: ${({ theme }) => theme.colors.gray[10]};
-  color: ${({ theme }) => theme.colors.text.default};
-  border: none;
-  border-radius: ${({ theme }) => theme.spacing[4]};
-  font-size: ${({ theme }) => theme.typography.body1.fontSize};
-  cursor: pointer;
-  margin-top: ${({ theme }) => theme.spacing[2]};
+const ObserverTarget = styled.div`
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: ${({ theme }) => theme.spacing[4]};
+`;
 
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
-  &:hover:not(:disabled) {
-    background-color: ${({ theme }) => theme.colors.gray[20]};
-  }
+const LoadingText = styled.div`
+  color: ${({ theme }) => theme.colors.text.sub};
+  font-size: ${({ theme }) => theme.typography.body2.fontSize};
 `;
 
 export const MentorList = ({
@@ -41,15 +35,44 @@ export const MentorList = ({
   hasNextPage,
   isFetchingNextPage,
 }: MentorListProps) => {
+  const observerTargetRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (
+          entries[0].isIntersecting &&
+          hasNextPage &&
+          !isFetchingNextPage &&
+          onLoadMore
+        ) {
+          onLoadMore();
+        }
+      },
+      { threshold: 0.1 },
+    );
+
+    const currentTarget = observerTargetRef.current;
+    if (currentTarget) {
+      observer.observe(currentTarget);
+    }
+
+    return () => {
+      if (currentTarget) {
+        observer.unobserve(currentTarget);
+      }
+    };
+  }, [hasNextPage, isFetchingNextPage, onLoadMore]);
+
   return (
     <Container>
       {mentors.map((mentor) => (
         <MentorCard key={mentor.mentorId} mentor={mentor} />
       ))}
       {hasNextPage && (
-        <LoadMoreButton onClick={onLoadMore} disabled={isFetchingNextPage}>
-          {isFetchingNextPage ? '로딩 중...' : '더 보기'}
-        </LoadMoreButton>
+        <ObserverTarget ref={observerTargetRef}>
+          {isFetchingNextPage && <LoadingText>더 불러오는 중...</LoadingText>}
+        </ObserverTarget>
       )}
     </Container>
   );
