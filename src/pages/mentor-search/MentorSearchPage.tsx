@@ -9,7 +9,8 @@ const Container = styled.div`
   flex-direction: column;
   min-height: 100vh;
   background-color: ${({ theme }) => theme.colors.background};
-  padding: ${({ theme }) => theme.spacing[4]} 0 ${({ theme }) => theme.spacing[16]} 0;
+  padding: ${({ theme }) => theme.spacing[4]} 0
+    ${({ theme }) => theme.spacing[16]} 0;
 `;
 
 const ErrorContainer = styled.div`
