@@ -51,6 +51,16 @@ const NetworkingModifyPage = () => {
     }
   }, [detailData]);
 
+  // 대표자 최소 인원수에 맞춰 참가자 수 설정
+  // 현재 참여 인원 이하(이하 포함)로 내리는 것을 막기 위해 최소값을 curNumber + 1로 설정
+  const minParticipantCount = (detailData?.curNumber || 0) + 1;
+
+  // 초기 participantCount가 최소값보다 작을 경우 최소값으로 강제
+  useEffect(() => {
+    if (!detailData) return;
+    setParticipantCount((prev) => Math.max(prev, minParticipantCount));
+  }, [detailData, minParticipantCount]);
+
   if (isDetailLoading || isParticipantsLoading) {
     return <div>로딩 중...</div>;
   }
@@ -58,9 +68,6 @@ const NetworkingModifyPage = () => {
   if (!detailData || !participants) {
     return <div>네트워킹 게시물을 불러올 수 없습니다.</div>;
   }
-
-  // 대표자 최소 인원수에 맞춰 참가자 수 설정
-  const minParticipantCount = detailData.curNumber;
 
   const handleComplete = async () => {
     if (!title || !selectedRepresentativeId) return;
