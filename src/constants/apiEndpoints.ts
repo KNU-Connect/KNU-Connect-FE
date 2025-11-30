@@ -3,6 +3,8 @@ export const API_ENDPOINTS = {
   NETWORKING: '/networking',
   NETWORKING_DETAIL: (id: number) => `/networking/${id}`,
   NETWORKING_PARTICIPATION: (id: number) => `/networking/${id}/participation`,
+  NETWORKING_PARTICIPATION_LIST: (id: number) =>
+    `/networking/${id}/participants`,
 
   // Chat
   CHAT_ROOMS: '/chat-rooms',

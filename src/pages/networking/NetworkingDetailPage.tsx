@@ -91,7 +91,7 @@ const NetworkingDetailPage = () => {
 
   return (
     <Container>
-      <NetworkingDetailHeader />
+      <NetworkingDetailHeader representativeId={post.representative.id} />
       <Content>
         <NetworkingDescription post={post} />
         <RepresentInfo post={post} />

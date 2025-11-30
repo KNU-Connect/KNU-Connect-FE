@@ -10,4 +10,5 @@ export const ROUTES = {
   MY_POSTS: '/my/posts',
   NETWORKING_DETAIL: '/networking/:id',
   NETWORKING_CREATE: '/networking/create/:chatId',
+  NETWORKING_MODIFY: '/networking/:id/modify',
 };

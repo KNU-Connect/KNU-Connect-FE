@@ -14,6 +14,7 @@ import {
   SignUpPage,
   NetworkingDetailPage,
   NetworkingCreatePage,
+  NetworkingModifyPage,
 } from '@/pages';
 
 /**
@@ -86,6 +87,16 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <NetworkingCreatePage />,
+      },
+    ],
+  },
+  {
+    path: ROUTES.NETWORKING_MODIFY,
+    element: <AppLayout headerType='none' navType='none' />,
+    children: [
+      {
+        index: true,
+        element: <NetworkingModifyPage />,
       },
     ],
   },

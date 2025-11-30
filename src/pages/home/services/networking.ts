@@ -68,6 +68,7 @@ export function convertBoardToPost(board: NetworkingBoard): NetworkingPost {
     date: `${month}/${day}`,
     isParticipating: board.isParticipating,
     representative: {
+      id: 0,
       name: '',
       affiliation: '',
       tags: [],

@@ -10,6 +10,8 @@ export const networkingQueryKeys = {
     },
   ) => [...networkingQueryKeys.lists(), params] as const,
   detail: (id: number) => [...networkingQueryKeys.all, 'detail', id] as const,
+  participants: (id: number) =>
+    [...networkingQueryKeys.all, 'participants', id] as const,
 };
 
 export const userQueryKeys = {
