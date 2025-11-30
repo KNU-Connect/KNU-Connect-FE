@@ -43,6 +43,7 @@ export const formatMbtiLabel = (mbti?: string | null): string => {
   if (!mbti) return '';
   const compact = mbti.trim();
   if (!compact) return '';
+  if (compact === '#NONE' || compact === 'NONE') return '모름';
   return compact.startsWith('#') ? compact : `#${compact.toUpperCase()}`;
 };
 
