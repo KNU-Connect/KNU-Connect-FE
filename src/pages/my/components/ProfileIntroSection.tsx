@@ -13,9 +13,10 @@ type ProfileIntroSectionProps = {
   onChangeShortIntro?: (value: string) => void;
   onChangeDetailIntro?: (value: string) => void;
   showMentorStatus?: boolean;
+  isMentorView?: boolean;
 };
 
-const ShortIntro = styled.div`
+const ShortIntro = styled.div<{ isEmpty?: boolean }>`
   ${({ theme }) => theme.typography.body2};
   margin-bottom: ${({ theme }) => theme.spacing[3]};
   padding: ${({ theme }) => `${theme.spacing[2]} ${theme.spacing[3]}`};
@@ -23,17 +24,19 @@ const ShortIntro = styled.div`
   border-radius: 20px;
   border: 1px solid ${({ theme }) => theme.colors.gray[30]};
   background-color: ${({ theme }) => theme.colors.gray[0]};
-  color: ${({ theme }) => theme.colors.text.default};
+  color: ${({ theme, isEmpty }) =>
+    isEmpty ? theme.colors.text.sub : theme.colors.text.default};
 `;
 
-const DetailIntro = styled.div`
+const DetailIntro = styled.div<{ isEmpty?: boolean }>`
   ${({ theme }) => theme.typography.body2};
   margin-top: ${({ theme }) => theme.spacing[2]};
   padding: ${({ theme }) => theme.spacing[3]};
   border-radius: 16px;
 
   background-color: ${({ theme }) => theme.colors.gray[10]};
-  color: ${({ theme }) => theme.colors.text.default};
+  color: ${({ theme, isEmpty }) =>
+    isEmpty ? theme.colors.text.sub : theme.colors.text.default};
   white-space: pre-wrap;
 
   p + p {
@@ -72,7 +75,23 @@ export const ProfileIntroSection = ({
   onChangeShortIntro,
   onChangeDetailIntro,
   showMentorStatus = true,
+  isMentorView = false,
 }: ProfileIntroSectionProps) => {
+  const isEmptyShortIntro = !shortIntro || shortIntro.trim() === '';
+  const isEmptyDetailIntro = !detailIntro || detailIntro.trim() === '';
+
+  const getEmptyShortIntroMessage = () => {
+    return isMentorView
+      ? '멘토의 한줄소개가 아직 없습니다.'
+      : '아직 한줄소개가 없습니다.';
+  };
+
+  const getEmptyDetailIntroMessage = () => {
+    return isMentorView
+      ? '멘토의 상세소개가 아직 없습니다.'
+      : '아직 상세소개가 없습니다.';
+  };
+
   if (!isEditMode) {
     return (
       <>
@@ -89,12 +108,18 @@ export const ProfileIntroSection = ({
         )}
 
         <FieldLabel>한줄 소개</FieldLabel>
-        <ShortIntro>{shortIntro}</ShortIntro>
+        <ShortIntro isEmpty={isEmptyShortIntro}>
+          {isEmptyShortIntro ? getEmptyShortIntroMessage() : shortIntro}
+        </ShortIntro>
         <FieldLabel>상세 소개</FieldLabel>
-        <DetailIntro>
-          {(detailIntro || '').split('\n').map((line, index) => (
-            <p key={index}>{line}</p>
-          ))}
+        <DetailIntro isEmpty={isEmptyDetailIntro}>
+          {isEmptyDetailIntro ? (
+            <p>{getEmptyDetailIntroMessage()}</p>
+          ) : (
+            (detailIntro || '')
+              .split('\n')
+              .map((line, index) => <p key={index}>{line}</p>)
+          )}
         </DetailIntro>
       </>
     );
