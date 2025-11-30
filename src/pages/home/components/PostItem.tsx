@@ -11,10 +11,10 @@ type PostItemProps = {
 export const PostItem = ({ post }: PostItemProps) => {
   const { mutate: participate, isPending } = useParticipateNetworking();
   const navigate = useNavigate();
-
   const handleJoin = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
+
     participate(
       { networkingId: post.id },
       {
@@ -42,13 +42,19 @@ export const PostItem = ({ post }: PostItemProps) => {
       </PostContent>
       <JoinButton
         onClick={handleJoin}
-        disabled={isPending || post.isParticipating}
+        disabled={
+          isPending ||
+          post.isParticipating ||
+          post.currentParticipants >= post.maxParticipants
+        }
       >
         {isPending
           ? '참여 중...'
           : post.isParticipating
             ? '참여중인 네트워킹입니다'
-            : '그룹채팅방 참여하기'}
+            : post.currentParticipants >= post.maxParticipants
+              ? '가득 찬 네트워킹입니다'
+              : '그룹채팅방 참여하기'}
       </JoinButton>
     </Item>
   );
