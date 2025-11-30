@@ -63,7 +63,9 @@ export const ChatRoomItem = ({
         </ChatName>
         <LastMessage>{room.lastMessage}</LastMessage>
       </ChatInfo>
-      <RightSection>
+      <RightSection
+        hasBadge={room.unreadCount != null && Number(room.unreadCount) > 0}
+      >
         <Date>{room.lastMessageDate}</Date>
         {room.unreadCount != null && Number(room.unreadCount) > 0 && (
           <UnreadBadge>{room.unreadCount}</UnreadBadge>
@@ -124,12 +126,18 @@ const LastMessage = styled.div`
   color: ${({ theme }) => theme.colors.text.default};
 `;
 
-const RightSection = styled.div`
+type RightSectionProps = {
+  hasBadge: boolean;
+};
+
+const RightSection = styled.div<RightSectionProps>`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   gap: ${({ theme }) => theme.spacing[2]};
   flex-shrink: 0;
+  align-self: stretch;
+  justify-content: ${({ hasBadge }) => (hasBadge ? 'center' : 'flex-start')};
 `;
 
 const Date = styled.div`
