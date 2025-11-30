@@ -126,4 +126,3 @@ export function convertMessageResponseToMessage(
     date: dateString,
   };
 }
-

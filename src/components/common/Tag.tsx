@@ -18,4 +18,3 @@ const StyledTag = styled.span<{ $color: string }>`
   line-height: ${({ theme }) => theme.typography.body2.lineHeight};
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
 `;
-

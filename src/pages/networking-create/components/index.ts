@@ -4,4 +4,3 @@ export { DescriptionInput } from './DescriptionInput';
 export { ParticipantCount } from './ParticipantCount';
 export { RepresentativeList } from './RepresentativeList';
 export { RepresentativeCard } from './RepresentativeCard';
-
