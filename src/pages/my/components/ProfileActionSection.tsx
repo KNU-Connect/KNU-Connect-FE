@@ -1,7 +1,8 @@
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
-import { MainButton } from '@/components/common';
+import { MainButton, LoadingDotsOverlay } from '@/components/common';
 import { ROUTES } from '@/routes';
+import { useLogout } from '@/pages/auth/services/logout';
 
 type ProfileActionSectionProps = {
   isEditMode: boolean;
@@ -67,33 +68,43 @@ export const ProfileActionSection = ({
   onClickCancel,
 }: ProfileActionSectionProps) => {
   const navigate = useNavigate();
+  const { mutate: handleLogout, isPending: isLoggingOut } = useLogout();
 
   const handleNavigateToMyPosts = () => {
     navigate(ROUTES.MY_POSTS);
   };
 
   return (
-    <ButtonSection>
-      {isEditMode ? (
-        <>
-          <SaveButton onClick={onClickSave} fullWidth>
-            프로필 저장
-          </SaveButton>
-          <EditProfileButton onClick={onClickCancel}>취소</EditProfileButton>
-        </>
-      ) : (
-        <>
-          <EditProfileButton onClick={onClickEdit}>
-            프로필 수정
-          </EditProfileButton>
+    <>
+      <ButtonSection>
+        {isEditMode ? (
+          <>
+            <SaveButton onClick={onClickSave} fullWidth>
+              프로필 저장
+            </SaveButton>
+            <EditProfileButton onClick={onClickCancel}>취소</EditProfileButton>
+          </>
+        ) : (
+          <>
+            <EditProfileButton onClick={onClickEdit}>
+              프로필 수정
+            </EditProfileButton>
 
-          <OutlineButton onClick={handleNavigateToMyPosts}>
-            내가 작성한 글 보러가기
-          </OutlineButton>
+            <OutlineButton onClick={handleNavigateToMyPosts}>
+              내가 작성한 글 보러가기
+            </OutlineButton>
 
-          <MainButton fullWidth>로그아웃</MainButton>
-        </>
-      )}
-    </ButtonSection>
+            <MainButton
+              fullWidth
+              onClick={() => handleLogout()}
+              disabled={isLoggingOut}
+            >
+              로그아웃
+            </MainButton>
+          </>
+        )}
+      </ButtonSection>
+      <LoadingDotsOverlay visible={isLoggingOut} />
+    </>
   );
 };
