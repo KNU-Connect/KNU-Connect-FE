@@ -1,3 +1,21 @@
+/**
+ * 채팅방 타입 확인 (네트워킹/멘토링)
+ * GET /api/chat-rooms/{chat_room_id}/type
+ */
+export interface GetChatRoomTypeResponse {
+  is_networking: boolean;
+  networking_id?: number;
+  networking_title?: string;
+}
+
+export async function getChatRoomType(
+  chatRoomId: number,
+): Promise<GetChatRoomTypeResponse> {
+  const { data } = await axiosInstance.get<GetChatRoomTypeResponse>(
+    `/chat-rooms/${chatRoomId}/type`,
+  );
+  return data;
+}
 import axiosInstance from '@/api/axiosInstance';
 import { API_ENDPOINTS } from '@/constants';
 import type { ChatMessage } from '@/types/chat';

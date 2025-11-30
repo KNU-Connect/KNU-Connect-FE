@@ -22,6 +22,7 @@ import type {
 import { useChatRoomList } from '@/pages/chat/hooks/useChatRoomList';
 import type { GetChatRoomListResponse } from '@/pages/chat/services/chat';
 import type { SocketUnreadCount } from './services/chat';
+import { useGetRoomType } from './hooks/useGetRoomType';
 
 const ChatDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -29,6 +30,11 @@ const ChatDetailPage = () => {
   const queryClient = useQueryClient();
   const chatRoomId = id ? Number(id) : 0;
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const {
+    data: roomTypeData,
+    isLoading: isRoomTypeLoading,
+    error: roomTypeError,
+  } = useGetRoomType(chatRoomId);
 
   const {
     data,
@@ -213,7 +219,7 @@ const ChatDetailPage = () => {
     setIsBottomSheetOpen(false);
   };
 
-  if (isLoading && !data) {
+  if (isLoading && !data && isRoomTypeLoading && !roomTypeData) {
     return (
       <Container>
         <LoadingMessage>로딩 중...</LoadingMessage>
@@ -221,7 +227,7 @@ const ChatDetailPage = () => {
     );
   }
 
-  if (error) {
+  if (error || !data || roomTypeError || !roomTypeData) {
     return (
       <Container>
         <ErrorMessage>채팅방을 찾을 수 없습니다.</ErrorMessage>
@@ -251,6 +257,8 @@ const ChatDetailPage = () => {
       <BottomSheet
         isOpen={isBottomSheetOpen}
         onNetworkPostClick={handleNetworkPostClick}
+        roomTypeData={roomTypeData}
+        networking_id={roomTypeData?.networking_id ?? -1}
       />
     </Container>
   );

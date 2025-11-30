@@ -1,23 +1,42 @@
 import styled from '@emotion/styled';
 import { FileEdit } from 'lucide-react';
 import { APP_WIDTH } from '@/constants/number';
+import type { GetChatRoomTypeResponse } from '../services/chat';
+import { useNavigate } from 'react-router-dom';
 
 type BottomSheetProps = {
   isOpen: boolean;
   onNetworkPostClick: () => void;
+  roomTypeData: GetChatRoomTypeResponse;
+  networking_id: number;
 };
 
 export const BottomSheet = ({
   isOpen,
   onNetworkPostClick,
+  roomTypeData,
+  networking_id,
 }: BottomSheetProps) => {
+  const navigate = useNavigate();
+
+  const gotoNetworkingPost = () => {
+    navigate(`/networking/${networking_id}`);
+  };
+
   return (
     <Container $isOpen={isOpen}>
       <Content>
-        <NetworkPostButton onClick={onNetworkPostClick}>
-          <FileEdit size={24} />
-          <ButtonText>네트워킹 글 생성하기</ButtonText>
-        </NetworkPostButton>
+        {!roomTypeData.is_networking ? (
+          <NetworkPostButton onClick={onNetworkPostClick}>
+            <FileEdit size={24} />
+            <ButtonText>네트워킹 글 생성하기</ButtonText>
+          </NetworkPostButton>
+        ) : (
+          <NetworkPostButton onClick={gotoNetworkingPost}>
+            <FileEdit size={24} />
+            <ButtonText>네트워킹 글 보러가기</ButtonText>
+          </NetworkPostButton>
+        )}
       </Content>
     </Container>
   );

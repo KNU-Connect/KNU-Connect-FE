@@ -38,6 +38,8 @@ export const chatQueryKeys = {
     [...chatQueryKeys.all, 'messages', chatRoomId] as const,
   participants: (chatRoomId: number) =>
     [...chatQueryKeys.all, 'participants', chatRoomId] as const,
+  roomType: (chatRoomId: number) =>
+    [...chatQueryKeys.all, 'roomType', chatRoomId] as const,
 };
 
 export const mentorQueryKeys = {
