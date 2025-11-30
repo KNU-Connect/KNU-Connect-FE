@@ -10,4 +10,3 @@ export const formatTime = (timestamp: string): string => {
   const minutes = date.getMinutes();
   return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
 };
-

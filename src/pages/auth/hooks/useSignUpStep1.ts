@@ -109,9 +109,12 @@ export const useSignUpStep1 = (onNext: () => void) => {
           );
           setValue('emailCodeSentAt', Date.now(), { shouldValidate: false });
         },
-        onError: (error: any) => {
+        onError: (error: unknown) => {
+          const axiosError = error as {
+            response?: { data?: { message?: string } };
+          };
           toast.error(
-            error.response?.data?.message ||
+            axiosError.response?.data?.message ||
               '인증번호 전송에 실패했습니다. 다시 시도해주세요.',
           );
         },
@@ -136,10 +139,13 @@ export const useSignUpStep1 = (onNext: () => void) => {
           );
           setValue('emailVerifiedAt', Date.now(), { shouldValidate: false });
         },
-        onError: (error: any) => {
+        onError: (error: unknown) => {
+          const axiosError = error as {
+            response?: { data?: { message?: string } };
+          };
           setVerificationStatus('error');
           setVerificationMessage(
-            error.response?.data?.message ||
+            axiosError.response?.data?.message ||
               '인증번호 확인에 실패했습니다. 다시 시도해주세요.',
           );
         },

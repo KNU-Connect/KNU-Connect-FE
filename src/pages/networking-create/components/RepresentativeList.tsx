@@ -46,4 +46,3 @@ const List = styled.div`
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing[4]};
 `;
-

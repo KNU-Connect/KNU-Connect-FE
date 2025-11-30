@@ -82,7 +82,7 @@ const MentorDetailPage = () => {
       await createChatRoomMutation.mutateAsync({
         participant_id: mentor.mentorId,
       });
-    } catch (error) {
+    } catch {
       toast.error('채팅방 생성에 실패했습니다. 다시 시도해주세요.');
     }
   };

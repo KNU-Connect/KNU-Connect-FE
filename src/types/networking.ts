@@ -1,4 +1,10 @@
-export type NetworkingTag = '프론트엔드' | '백엔드' | '취업' | '#INTJ' | '#ENFP' | '#ISTJ';
+export type NetworkingTag =
+  | '프론트엔드'
+  | '백엔드'
+  | '취업'
+  | '#INTJ'
+  | '#ENFP'
+  | '#ISTJ';
 
 export type NetworkingPost = {
   id: number;
@@ -15,4 +21,3 @@ export type NetworkingPost = {
     profileImage?: string;
   };
 };
-

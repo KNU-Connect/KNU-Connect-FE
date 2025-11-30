@@ -80,4 +80,3 @@ const Button = styled.button`
     opacity: ${({ disabled }) => (disabled ? 1 : 0.5)};
   }
 `;
-

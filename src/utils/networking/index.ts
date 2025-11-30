@@ -1,2 +1,1 @@
 export { getTagColor } from './getTagColor';
-
