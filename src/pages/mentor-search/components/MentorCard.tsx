@@ -114,13 +114,14 @@ const IntroLabel = styled.span`
   font-weight: ${({ theme }) => theme.typography.fontWeight.medium};
 `;
 
-const IntroText = styled.div`
+const IntroText = styled.div<{ isEmpty?: boolean }>`
   ${({ theme }) => theme.typography.body2};
   padding: ${({ theme }) => `${theme.spacing[2]} ${theme.spacing[3]}`};
   border-radius: 20px;
   border: 1px solid ${({ theme }) => theme.colors.gray[30]};
   background-color: ${({ theme }) => theme.colors.gray[0]};
-  color: ${({ theme }) => theme.colors.text.default};
+  color: ${({ theme, isEmpty }) =>
+    isEmpty ? theme.colors.text.sub : theme.colors.text.default};
 `;
 
 const ViewDetailsButton = styled.button`
@@ -185,7 +186,13 @@ export const MentorCard = ({ mentor }: MentorCardProps) => {
       </ProfileHeader>
       <IntroSection>
         <IntroLabel>한줄 소개</IntroLabel>
-        <IntroText>{mentor.introduction}</IntroText>
+        <IntroText
+          isEmpty={!mentor.introduction || mentor.introduction.trim() === ''}
+        >
+          {!mentor.introduction || mentor.introduction.trim() === ''
+            ? '멘토의 한줄소개가 아직 없습니다.'
+            : mentor.introduction}
+        </IntroText>
       </IntroSection>
       <ViewDetailsButton onClick={handleViewDetails}>
         멘토 상세보기
