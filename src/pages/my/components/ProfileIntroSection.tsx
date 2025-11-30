@@ -92,8 +92,8 @@ export const ProfileIntroSection = ({
         <ShortIntro>{shortIntro}</ShortIntro>
         <FieldLabel>상세 소개</FieldLabel>
         <DetailIntro>
-          {detailIntro.split('\n').map((line) => (
-            <p key={line}>{line}</p>
+          {(detailIntro || '').split('\n').map((line, index) => (
+            <p key={index}>{line}</p>
           ))}
         </DetailIntro>
       </>

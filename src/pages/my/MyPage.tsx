@@ -53,8 +53,8 @@ const MyPageContent: React.FC = () => {
       setInterest(userProfile.interest);
       setMbti(userProfile.mbti);
       setIsMentor(userProfile.mentor);
-      setShortIntro(userProfile.introduction);
-      setDetailIntro(userProfile.detail_introduction);
+      setShortIntro(userProfile.introduction || '');
+      setDetailIntro(userProfile.detail_introduction || '');
 
       setOriginalData({
         name: userProfile.name,
@@ -64,8 +64,8 @@ const MyPageContent: React.FC = () => {
         interest: userProfile.interest,
         mbti: userProfile.mbti,
         isMentor: userProfile.mentor,
-        shortIntro: userProfile.introduction,
-        detailIntro: userProfile.detail_introduction,
+        shortIntro: userProfile.introduction || '',
+        detailIntro: userProfile.detail_introduction || '',
       });
     }
   }, [userProfile]);
