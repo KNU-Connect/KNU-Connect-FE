@@ -7,7 +7,8 @@ import {
   ChatDetailPage,
   HomePage,
   LoginPage,
-  MentorPage,
+  MentorSearchPage,
+  MentorDetailPage,
   MyPage,
   MyPostsPage,
   SignUpPage,
@@ -48,7 +49,11 @@ const router = createBrowserRouter([
       },
       {
         path: ROUTES.MENTOR,
-        element: <MentorPage />,
+        element: <MentorSearchPage />,
+      },
+      {
+        path: ROUTES.MENTOR_DETAIL,
+        element: <MentorDetailPage />,
       },
       {
         path: ROUTES.MY,
