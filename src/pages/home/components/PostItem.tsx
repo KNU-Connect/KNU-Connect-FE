@@ -27,8 +27,15 @@ export const PostItem = ({ post }: PostItemProps) => {
           <Date>{post.date}</Date>
         </PostMeta>
       </PostContent>
-      <JoinButton onClick={handleJoin} disabled={isPending}>
-        {isPending ? '참여 중...' : '그룹채팅방 참여하기'}
+      <JoinButton
+        onClick={handleJoin}
+        disabled={isPending || post.isParticipating}
+      >
+        {isPending
+          ? '참여 중...'
+          : post.isParticipating
+            ? '참여중인 네트워킹입니다'
+            : '그룹채팅방 참여하기'}
       </JoinButton>
     </Item>
   );

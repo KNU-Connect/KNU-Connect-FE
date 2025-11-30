@@ -40,9 +40,13 @@ const NetworkingDetailPage = () => {
         <RepresentInfo post={post} />
         <JoinButton
           onClick={() => participate(networkingId)}
-          disabled={isPending}
+          disabled={isPending || post.isParticipating}
         >
-          {isPending ? '참여 중...' : '그룹채팅방 참여하기'}
+          {isPending
+            ? '참여 중...'
+            : post.isParticipating
+              ? '참여중인 네트워킹입니다'
+              : '그룹채팅방 참여하기'}
         </JoinButton>
       </Content>
     </Container>
