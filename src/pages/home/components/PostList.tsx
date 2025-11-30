@@ -2,9 +2,8 @@ import styled from '@emotion/styled';
 import { useEffect, useRef } from 'react';
 import type { NetworkingPost } from '@/types/networking';
 import { PostItem } from './PostItem';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ROUTES } from '@/routes';
-import { PencilLine } from 'lucide-react';
 
 type PostListProps = {
   posts: NetworkingPost[];
@@ -19,7 +18,6 @@ export const PostList = ({
   hasNextPage,
   isFetchingNextPage,
 }: PostListProps) => {
-  const navigate = useNavigate();
   const observerTarget = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -44,10 +42,6 @@ export const PostList = ({
     };
   }, [hasNextPage, isFetchingNextPage, onLoadMore]);
 
-  const handleWrite = () => {
-    navigate(ROUTES.NETWORKING_CREATE.replace(':chatId', 'new'));
-  };
-
   return (
     <Container>
       {posts.map((post) => (
@@ -64,10 +58,6 @@ export const PostList = ({
           {isFetchingNextPage && <LoadingText>더 불러오는 중...</LoadingText>}
         </ObserverTarget>
       )}
-
-      <FloatingActionButton onClick={handleWrite} aria-label='새 글 작성'>
-        <PencilLine size={24} />
-      </FloatingActionButton>
     </Container>
   );
 };
@@ -92,20 +82,4 @@ const ObserverTarget = styled.div`
 const LoadingText = styled.div`
   color: ${({ theme }) => theme.colors.text.sub};
   font-size: ${({ theme }) => theme.typography.body2.fontSize};
-`;
-
-const FloatingActionButton = styled.button`
-  position: absolute;
-  right: ${({ theme }) => theme.spacing[6]};
-  bottom: 16px;
-  width: 56px;
-  height: 56px;
-  background-color: ${({ theme }) => theme.colors.primary};
-  color: ${({ theme }) => theme.colors.text.white};
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 10;
 `;

@@ -4,8 +4,12 @@ import { SearchBar, InfoInputButton, PostList } from './components';
 import { useNetworkingList } from './hooks/useNetworkingList';
 import { convertBoardToPost } from './services/networking';
 import { HEADER_HEIGHT, NAV_HEIGHT } from '@/constants';
+import { useNavigate } from 'react-router-dom';
+import { PencilLine } from 'lucide-react';
+import { ROUTES } from '@/routes';
 
 const HomePage = () => {
+  const navigate = useNavigate();
   const [keyword, setKeyword] = useState<string>('');
   const {
     data,
@@ -23,6 +27,10 @@ const HomePage = () => {
 
   const handleSearch = (searchKeyword: string) => {
     setKeyword(searchKeyword);
+  };
+
+  const handleWrite = () => {
+    navigate(ROUTES.NETWORKING_CREATE.replace(':chatId', 'new'));
   };
 
   // 모든 페이지의 boards를 평탄화
@@ -45,6 +53,10 @@ const HomePage = () => {
           isFetchingNextPage={isFetchingNextPage}
         />
       )}
+
+      <FloatingActionButton onClick={handleWrite} aria-label='새 글 작성'>
+        <PencilLine size={24} />
+      </FloatingActionButton>
     </Container>
   );
 };
@@ -72,4 +84,21 @@ const ErrorText = styled.div`
   text-align: center;
   color: ${({ theme }) => theme.colors.primary};
   font-size: ${({ theme }) => theme.typography.body1.fontSize};
+`;
+
+const FloatingActionButton = styled.button`
+  position: sticky;
+  align-self: flex-end;
+  margin-right: ${({ theme }) => theme.spacing[4]};
+  bottom: calc(${NAV_HEIGHT}px + ${({ theme }) => theme.spacing[4]});
+  width: 56px;
+  height: 56px;
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.text.white};
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
 `;
