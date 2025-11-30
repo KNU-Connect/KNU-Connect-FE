@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { useEffect, useRef } from 'react';
 import type { NetworkingPost } from '@/types/networking';
 import { PostItem } from './PostItem';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/routes';
 import { PencilLine } from 'lucide-react';
 
@@ -19,6 +19,7 @@ export const PostList = ({
   hasNextPage,
   isFetchingNextPage,
 }: PostListProps) => {
+  const navigate = useNavigate();
   const observerTarget = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -43,6 +44,10 @@ export const PostList = ({
     };
   }, [hasNextPage, isFetchingNextPage, onLoadMore]);
 
+  const handleWrite = () => {
+    navigate(ROUTES.NETWORKING_CREATE.replace(':chatId', 'new'));
+  };
+
   return (
     <Container>
       {posts.map((post) => (
@@ -60,7 +65,7 @@ export const PostList = ({
         </ObserverTarget>
       )}
 
-      <FloatingActionButton>
+      <FloatingActionButton onClick={handleWrite} aria-label='새 글 작성'>
         <PencilLine size={24} />
       </FloatingActionButton>
     </Container>
