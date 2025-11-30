@@ -5,6 +5,7 @@ export const ROUTES = {
   CHAT: '/chat',
   CHAT_DETAIL: '/chat/:id',
   MENTOR: '/mentor',
+  MENTOR_DETAIL: '/mentor/:id',
   MY: '/my',
   MY_POSTS: '/my/posts',
   NETWORKING_DETAIL: '/networking/:id',
