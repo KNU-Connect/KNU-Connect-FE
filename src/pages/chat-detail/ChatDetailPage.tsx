@@ -1,7 +1,10 @@
 import styled from '@emotion/styled';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
+import type { InfiniteData } from '@tanstack/react-query';
 import { ROUTES } from '@/routes/paths';
+import { chatQueryKeys } from '@/constants/queryKeys';
 import {
   ChatDetailHeader,
   MessageList,
@@ -9,12 +12,21 @@ import {
   BottomSheet,
 } from './components';
 import { useChatMessages } from './hooks/useChatMessages';
+import { useChatSocket } from './hooks/useChatSocket';
 import { convertMessageResponseToMessage } from './services/chat';
+import type {
+  GetChatMessagesResponse,
+  SocketChatMessage,
+  SocketError,
+} from './services/chat';
 import { useChatRoomList } from '@/pages/chat/hooks/useChatRoomList';
+import type { GetChatRoomListResponse } from '@/pages/chat/services/chat';
+import type { SocketUnreadCount } from './services/chat';
 
 const ChatDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const chatRoomId = id ? Number(id) : 0;
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
@@ -26,6 +38,90 @@ const ChatDetailPage = () => {
     hasNextPage,
     isFetchingNextPage,
   } = useChatMessages(chatRoomId);
+
+  // 소켓 메시지 수신 핸들러
+  const handleMessageReceived = useCallback(
+    (newMessage: SocketChatMessage) => {
+      // 소켓 메시지 포맷을 API 응답 포맷으로 변환
+      // (소켓은 createdAt, API는 created_at을 사용)
+      // LocalDateTime 형식 (예: "2025-11-29T13:07:22.729684")을 그대로 사용
+      // LocalDateTime은 ISO 8601 형식과 호환되므로 new Date()가 파싱 가능
+      const formattedCreatedAt =
+        newMessage.createdAt || new Date().toISOString();
+
+      queryClient.setQueryData(
+        chatQueryKeys.messages(chatRoomId),
+        (oldData: InfiniteData<GetChatMessagesResponse> | undefined) => {
+          if (!oldData) return oldData;
+
+          // 가장 첫 번째 페이지(최신)에 새 메시지 추가
+          const newPages = [...oldData.pages];
+          // 새 메시지 형식 변환 (ChatMessageResponse 형태여야 함)
+          const chatMessageResponse = {
+            message_id: newMessage.message_id,
+            sender_id: newMessage.sender_id,
+            sender_name: newMessage.sender_name,
+            content: newMessage.content,
+            created_at: formattedCreatedAt,
+          };
+
+          newPages[0] = {
+            ...newPages[0],
+            messages: [chatMessageResponse, ...newPages[0].messages],
+          };
+
+          return {
+            ...oldData,
+            pages: newPages,
+          };
+        },
+      );
+    },
+    [chatRoomId, queryClient],
+  );
+
+  // 소켓 에러 핸들러
+  const handleErrorReceived = useCallback((error: SocketError) => {
+    console.error('Socket error:', error);
+    // TODO: 에러 토스트 표시 등
+  }, []);
+
+  // 안읽은 메시지 수 업데이트 핸들러
+  const handleUnreadCountReceived = useCallback(
+    (data: SocketUnreadCount) => {
+      // 채팅 리스트의 안읽은 메시지 수 업데이트
+      queryClient.setQueryData(
+        chatQueryKeys.rooms(),
+        (oldData: GetChatRoomListResponse | undefined) => {
+          if (!oldData) return oldData;
+
+          const updatedRooms = oldData.chat_rooms.map((room) => {
+            if (room.id === data.chat_room_id) {
+              return {
+                ...room,
+                unread_count: data.unread_count,
+              };
+            }
+            return room;
+          });
+
+          return {
+            ...oldData,
+            chat_rooms: updatedRooms,
+          };
+        },
+      );
+    },
+    [queryClient],
+  );
+
+  // 소켓 연결
+  const { sendMessage } = useChatSocket({
+    chatRoomId,
+    onMessageReceived: handleMessageReceived,
+    onErrorReceived: handleErrorReceived,
+    onUnreadCountReceived: handleUnreadCountReceived,
+  });
 
   // 채팅방 이름 가져오기
   const { data: chatRoomsData } = useChatRoomList();
@@ -120,6 +216,7 @@ const ChatDetailPage = () => {
       <ChatInput
         isBottomSheetOpen={isBottomSheetOpen}
         onPlusClick={() => setIsBottomSheetOpen(!isBottomSheetOpen)}
+        onSend={sendMessage}
       />
       <BottomSheet
         isOpen={isBottomSheetOpen}

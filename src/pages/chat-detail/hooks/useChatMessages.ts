@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { getChatMessages, type GetChatMessagesParams } from '../services/chat';
+import { getChatMessages } from '../services/chat';
 import { chatQueryKeys } from '@/constants/queryKeys';
 
 export function useChatMessages(chatRoomId: number, size: number = 20) {

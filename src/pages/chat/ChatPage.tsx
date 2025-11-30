@@ -1,7 +1,8 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { ChatHeader, ChatList, LeaveChatModal } from './components';
 import { useChatRoomList } from './hooks/useChatRoomList';
+import { useChatRoomUnreadCounts } from './hooks/useChatRoomUnreadCounts';
 import { convertChatRoomResponseToRoom } from './services/chat';
 import { useLeaveChatRoom } from './hooks/useLeaveChatRoom';
 
@@ -10,6 +11,15 @@ const ChatPage = () => {
   const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
   const { data, isLoading, error } = useChatRoomList();
   const { mutate: leaveChat, isPending } = useLeaveChatRoom();
+
+  // 채팅방 ID 목록 추출
+  const chatRoomIds = useMemo(
+    () => data?.chat_rooms.map((room) => room.id) ?? [],
+    [data],
+  );
+
+  // 안읽은 메시지 수 소켓 구독
+  useChatRoomUnreadCounts(chatRoomIds);
 
   const handleRoomLongPress = (roomId: number) => {
     setSelectedRoomId(roomId);

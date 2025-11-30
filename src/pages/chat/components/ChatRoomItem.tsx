@@ -63,7 +63,12 @@ export const ChatRoomItem = ({
         </ChatName>
         <LastMessage>{room.lastMessage}</LastMessage>
       </ChatInfo>
-      <Date>{room.lastMessageDate}</Date>
+      <RightSection>
+        <Date>{room.lastMessageDate}</Date>
+        {room.unreadCount != null && Number(room.unreadCount) > 0 && (
+          <UnreadBadge>{room.unreadCount}</UnreadBadge>
+        )}
+      </RightSection>
     </ChatItem>
   );
 };
@@ -119,9 +124,31 @@ const LastMessage = styled.div`
   color: ${({ theme }) => theme.colors.text.default};
 `;
 
+const RightSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: ${({ theme }) => theme.spacing[2]};
+  flex-shrink: 0;
+`;
+
 const Date = styled.div`
   font-size: ${({ theme }) => theme.typography.body2.fontSize};
   line-height: ${({ theme }) => theme.typography.body2.lineHeight};
   color: ${({ theme }) => theme.colors.text.sub};
-  flex-shrink: 0;
+`;
+
+const UnreadBadge = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 ${({ theme }) => theme.spacing[2]};
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.text.white};
+  border-radius: 10px;
+  font-size: ${({ theme }) => theme.typography.body3.fontSize};
+  line-height: ${({ theme }) => theme.typography.body3.lineHeight};
+  font-weight: ${({ theme }) => theme.typography.fontWeight.bold};
 `;

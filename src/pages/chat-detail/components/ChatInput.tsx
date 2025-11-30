@@ -1,28 +1,40 @@
 import styled from '@emotion/styled';
 import { Plus, X, Send } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { APP_WIDTH } from '@/constants/number';
 
 type ChatInputProps = {
   isBottomSheetOpen: boolean;
   onPlusClick: () => void;
+  onSend: (message: string) => void;
 };
 
 export const ChatInput = ({
   isBottomSheetOpen,
   onPlusClick,
+  onSend,
 }: ChatInputProps) => {
   const [message, setMessage] = useState('');
+  const isComposingRef = useRef(false);
 
   const handleSend = () => {
     if (message.trim()) {
-      // TODO: 메시지 전송 로직
+      onSend(message.trim());
       setMessage('');
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+  const handleCompositionStart = () => {
+    isComposingRef.current = true;
+  };
+
+  const handleCompositionEnd = () => {
+    isComposingRef.current = false;
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // IME 조합 중이 아닐 때만 Enter 키 처리
+    if (e.key === 'Enter' && !e.shiftKey && !isComposingRef.current) {
       e.preventDefault();
       handleSend();
     }
@@ -37,7 +49,9 @@ export const ChatInput = ({
         placeholder='메시지 입력'
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        onKeyDown={handleKeyPress}
+        onKeyDown={handleKeyDown}
+        onCompositionStart={handleCompositionStart}
+        onCompositionEnd={handleCompositionEnd}
       />
       <SendButton onClick={handleSend} disabled={!message.trim()}>
         <Send size={24} />
