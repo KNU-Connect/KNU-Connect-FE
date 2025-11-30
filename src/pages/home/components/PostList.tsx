@@ -5,7 +5,6 @@ import { PostItem } from './PostItem';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '@/routes';
 import { PencilLine } from 'lucide-react';
-import { NAV_HEIGHT } from '@/constants';
 
 type PostListProps = {
   posts: NetworkingPost[];
@@ -70,7 +69,6 @@ export const PostList = ({
 
 const Container = styled.div`
   display: flex;
-  position: relative;
   flex-direction: column;
   gap: 0;
   width: 100%;
@@ -92,9 +90,9 @@ const LoadingText = styled.div`
 `;
 
 const FloatingActionButton = styled.button`
-  position: fixed;
+  position: absolute;
   right: ${({ theme }) => theme.spacing[6]};
-  bottom: ${NAV_HEIGHT + 16}px;
+  bottom: 16px;
   width: 56px;
   height: 56px;
   background-color: ${({ theme }) => theme.colors.primary};

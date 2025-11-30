@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { SearchBar, InfoInputButton, PostList } from './components';
 import { useNetworkingList } from './hooks/useNetworkingList';
 import { convertBoardToPost } from './services/networking';
+import { HEADER_HEIGHT, NAV_HEIGHT } from '@/constants';
 
 const HomePage = () => {
   const [keyword, setKeyword] = useState<string>('');
@@ -52,9 +53,11 @@ export default HomePage;
 
 const Container = styled.div`
   display: flex;
+  position: relative;
   flex-direction: column;
   padding: ${({ theme }) => theme.spacing[4]} 0;
   gap: ${({ theme }) => theme.spacing[4]};
+  min-height: calc(100dvh - ${HEADER_HEIGHT}px - ${NAV_HEIGHT}px);
 `;
 
 const LoadingText = styled.div`
