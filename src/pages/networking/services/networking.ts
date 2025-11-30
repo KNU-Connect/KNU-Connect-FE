@@ -12,6 +12,7 @@ export interface NetworkingDetailResponse {
   createdAt: string;
   chatRoomId?: number;
   representative: {
+    id: number;
     name: string;
     status: string; // 'student' | 'graduate' | 'professor'
     department: string; // 'computer' | 'software' | etc.
@@ -94,6 +95,7 @@ export function convertDetailToPost(
     isParticipating: detail.isParticipating,
     date: `${month}/${day}`,
     representative: {
+      id: detail.representative.id,
       name: detail.representative.name,
       affiliation,
       tags,

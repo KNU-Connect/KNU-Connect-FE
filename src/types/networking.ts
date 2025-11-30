@@ -15,6 +15,7 @@ export type NetworkingPost = {
   date: string; // MM/DD 형식
   isParticipating: boolean;
   representative: {
+    id: number;
     name: string;
     affiliation: string;
     tags: NetworkingTag[];
