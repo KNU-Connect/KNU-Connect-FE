@@ -74,4 +74,3 @@ export function useChatRoomUnreadCounts(chatRoomIds: number[]) {
     };
   }, [accessToken, chatRoomIds, handleUnreadCount]);
 }
-

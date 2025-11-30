@@ -25,7 +25,7 @@ class SocketClient {
 
     const socketUrl = import.meta.env.DEV
       ? '/ws'
-      : import.meta.env.VITE_API_BASE_URL + '/ws';
+      : import.meta.env.VITE_WS_BASE_URL + '/ws';
 
     this.client = new Client({
       webSocketFactory: () => new SockJS(socketUrl),
@@ -79,7 +79,7 @@ class SocketClient {
     return this.client.subscribe(topic, callback);
   }
 
-  public publish(destination: string, body: any = {}): void {
+  public publish(destination: string, body: unknown = {}): void {
     if (!this.client || !this.connected) {
       console.warn('Cannot publish: Client is not connected');
       return;

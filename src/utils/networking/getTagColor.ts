@@ -16,4 +16,3 @@ export const getTagColor = (tag: NetworkingTag, theme: Theme): string => {
   }
   return theme.colors.tag.gold;
 };
-

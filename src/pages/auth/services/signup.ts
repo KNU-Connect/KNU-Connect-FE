@@ -14,7 +14,7 @@ export interface SignupRequestBody {
   mentor: boolean;
 }
 
-export interface SignupResponseBody {}
+export type SignupResponseBody = Record<string, never>;
 
 const MBTI_NONE_LABEL = '모름';
 

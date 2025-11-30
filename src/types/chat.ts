@@ -25,4 +25,3 @@ export type ChatDetail = {
   };
   messages: ChatMessage[];
 };
-

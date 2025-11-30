@@ -19,4 +19,3 @@ export function useChatMessages(chatRoomId: number, size: number = 20) {
     },
   });
 }
-
