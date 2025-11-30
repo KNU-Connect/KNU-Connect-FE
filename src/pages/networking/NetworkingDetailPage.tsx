@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { useTheme } from '@emotion/react';
 import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { NetworkingDescription, RepresentInfo } from './components';
 import { NetworkingDetailHeader } from './components/NetworkingDetailHeader';
 import { HEADER_HEIGHT, NAV_HEIGHT } from '@/constants';
@@ -16,8 +16,10 @@ import {
   buildParticipantTagItems,
   mapDepartmentLabel,
 } from '@/utils/networking';
+import { ROUTES } from '@/routes';
 
 const NetworkingDetailPage = () => {
+  const navigate = useNavigate();
   const theme = useTheme();
   const { id } = useParams<{ id: string }>();
   const networkingId = id ? Number(id) : 0;
@@ -39,6 +41,20 @@ const NetworkingDetailPage = () => {
     queryFn: () => getChatRoomParticipants(chatRoomId as number),
     enabled: !!chatRoomId,
   });
+
+  const handleJoin = () => {
+    participate(
+      { networkingId: post.id },
+      {
+        onSuccess: () => {
+          navigate(ROUTES.CHAT);
+        },
+        onError: () => {
+          alert('네트워킹 참여에 실패했습니다. 다시 시도해주세요.');
+        },
+      },
+    );
+  };
 
   if (isLoading) {
     return (
@@ -124,7 +140,7 @@ const NetworkingDetailPage = () => {
           </ParticipantSection>
         )}
         <JoinButton
-          onClick={() => participate(networkingId)}
+          onClick={handleJoin}
           disabled={isPending || post.isParticipating}
         >
           {isPending

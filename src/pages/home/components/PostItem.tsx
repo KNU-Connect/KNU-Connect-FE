@@ -1,6 +1,8 @@
 import styled from '@emotion/styled';
 import type { NetworkingPost } from '@/types/networking';
 import { useParticipateNetworking } from '@/pages/networking/hooks/useParticipateNetworking';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/routes';
 
 type PostItemProps = {
   post: NetworkingPost;
@@ -8,11 +10,22 @@ type PostItemProps = {
 
 export const PostItem = ({ post }: PostItemProps) => {
   const { mutate: participate, isPending } = useParticipateNetworking();
+  const navigate = useNavigate();
 
   const handleJoin = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
-    participate(post.id);
+    participate(
+      { networkingId: post.id },
+      {
+        onSuccess: () => {
+          navigate(ROUTES.CHAT);
+        },
+        onError: () => {
+          alert('네트워킹 참여에 실패했습니다. 다시 시도해주세요.');
+        },
+      },
+    );
   };
 
   return (
