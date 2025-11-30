@@ -67,6 +67,7 @@ const NetworkingCreatePage = () => {
       department: userProfile.department,
       career: userProfile.career,
       interest: userProfile.interest,
+      status: userProfile.status,
       mbti: userProfile.mbti,
       introduction: userProfile.introduction,
     } satisfies ChatParticipant;

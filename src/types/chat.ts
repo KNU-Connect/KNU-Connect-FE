@@ -3,6 +3,7 @@ export type ChatParticipant = {
   name: string;
   department: string;
   career: string;
+  status: string;
   interest: string;
   mbti: string;
   introduction?: string | null;
