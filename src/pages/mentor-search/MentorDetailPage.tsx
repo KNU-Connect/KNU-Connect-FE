@@ -8,6 +8,7 @@ import { MainButton } from '@/components/common';
 import { useMentorDetail } from './hooks/useMentorDetail';
 import { useCreateChatRoom } from './hooks/useCreateChatRoom';
 import { PageSpinner } from '@/components/common';
+import { useUserProfile } from '@/pages/my/hooks/useUserProfile';
 
 const Container = styled.div`
   display: flex;
@@ -52,8 +53,24 @@ const Content = styled.div`
   padding-bottom: ${({ theme }) => theme.spacing[16]};
 `;
 
-const SendMessageButton = styled(MainButton)`
+const SendMessageButton = styled(MainButton)<{ $isDisabled?: boolean }>`
   margin-top: ${({ theme }) => theme.spacing[4]};
+
+  ${({ $isDisabled, theme }) =>
+    $isDisabled &&
+    `
+    background-color: ${theme.colors.gray[40]};
+    color: ${theme.colors.text.white};
+    opacity: 1;
+    cursor: not-allowed;
+  `}
+`;
+
+const DisabledMessage = styled.p`
+  margin-top: ${({ theme }) => theme.spacing[2]};
+  text-align: center;
+  ${({ theme }) => theme.typography.body2};
+  color: ${({ theme }) => theme.colors.text.sub};
 `;
 
 const ErrorText = styled.div`
@@ -69,7 +86,11 @@ const MentorDetailPage = () => {
   const mentorId = id ? Number(id) : 0;
 
   const { data: mentor, isLoading, error } = useMentorDetail(mentorId);
+  const { data: currentUser } = useUserProfile();
   const createChatRoomMutation = useCreateChatRoom();
+
+  const isOwnProfile =
+    currentUser?.id !== undefined && mentor?.mentorId === currentUser.id;
 
   const handleBack = () => {
     navigate(-1);
@@ -133,10 +154,14 @@ const MentorDetailPage = () => {
 
         <SendMessageButton
           onClick={handleSendMessage}
-          disabled={createChatRoomMutation.isPending}
+          disabled={isOwnProfile || createChatRoomMutation.isPending}
+          $isDisabled={isOwnProfile}
         >
           메시지 보내기
         </SendMessageButton>
+        {isOwnProfile && (
+          <DisabledMessage>자신에게 메시지를 보낼 수 없습니다.</DisabledMessage>
+        )}
       </Content>
     </Container>
   );
