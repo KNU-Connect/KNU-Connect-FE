@@ -1,3 +1,4 @@
+import type { NetworkingParticipant } from '@/pages/networking-modify/services/getNetworkingParticipantsList';
 import type { ChatParticipant } from '@/types/chat';
 
 const DEPARTMENT_LABELS: Record<string, string> = {
@@ -52,6 +53,34 @@ export type ParticipantTagItem = {
 
 export const buildParticipantTagItems = (
   participant: ChatParticipant,
+  themeColors: {
+    interest: string;
+    career: string;
+    mbti: string;
+  },
+): ParticipantTagItem[] => {
+  const items: ParticipantTagItem[] = [];
+
+  const interestLabel = mapInterestLabel(participant.interest);
+  if (interestLabel) {
+    items.push({ label: interestLabel, color: themeColors.interest });
+  }
+
+  const careerLabel = mapCareerLabel(participant.career);
+  if (careerLabel) {
+    items.push({ label: careerLabel, color: themeColors.career });
+  }
+
+  const mbtiLabel = formatMbtiLabel(participant.mbti);
+  if (mbtiLabel) {
+    items.push({ label: mbtiLabel, color: themeColors.mbti });
+  }
+
+  return items;
+};
+
+export const buildParticipantTagItemsN = (
+  participant: NetworkingParticipant,
   themeColors: {
     interest: string;
     career: string;
