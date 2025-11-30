@@ -1,4 +1,5 @@
 import type { GetNetworkingListParams } from '@/pages/home/services/networking';
+import type { GetMentorListParams } from '@/pages/mentor-search/services/mentor';
 
 export const networkingQueryKeys = {
   all: ['networking'] as const,
@@ -35,4 +36,16 @@ export const chatQueryKeys = {
   rooms: () => [...chatQueryKeys.all, 'rooms'] as const,
   messages: (chatRoomId: number) =>
     [...chatQueryKeys.all, 'messages', chatRoomId] as const,
+};
+
+export const mentorQueryKeys = {
+  all: ['mentor'] as const,
+  lists: () => [...mentorQueryKeys.all, 'list'] as const,
+  list: (
+    params?: Omit<GetMentorListParams, 'pageable'> & {
+      pageable?: { size?: number; sort?: string[] };
+    },
+  ) => [...mentorQueryKeys.lists(), params] as const,
+  detail: (userId: number) =>
+    [...mentorQueryKeys.all, 'detail', userId] as const,
 };
