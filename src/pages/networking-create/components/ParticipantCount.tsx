@@ -3,12 +3,14 @@ import { ChevronUp, ChevronDown, User } from 'lucide-react';
 
 type ParticipantCountProps = {
   count: number;
+  min?: number;
   onIncrease: () => void;
   onDecrease: () => void;
 };
 
 export const ParticipantCount = ({
   count,
+  min = 1,
   onIncrease,
   onDecrease,
 }: ParticipantCountProps) => {
@@ -22,7 +24,7 @@ export const ParticipantCount = ({
         <Button onClick={onIncrease}>
           <ChevronUp size={20} />
         </Button>
-        <Button onClick={onDecrease} disabled={count <= 1}>
+        <Button onClick={onDecrease} disabled={count <= min}>
           <ChevronDown size={20} />
         </Button>
       </Controls>

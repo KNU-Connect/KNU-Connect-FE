@@ -61,6 +61,12 @@ const NetworkingCreatePage = () => {
     }
   }, [participants, selectedRepresentativeId]);
 
+  const minParticipantCount = Math.max(participants.length, 1);
+
+  useEffect(() => {
+    setParticipantCount((prev) => Math.max(prev, minParticipantCount));
+  }, [minParticipantCount]);
+
   const handleComplete = async () => {
     if (!title || !selectedRepresentativeId) return;
 
@@ -88,7 +94,7 @@ const NetworkingCreatePage = () => {
   };
 
   const handleDecreaseCount = () => {
-    if (participantCount > 1) {
+    if (participantCount > minParticipantCount) {
       setParticipantCount((prev) => prev - 1);
     }
   };
@@ -110,6 +116,7 @@ const NetworkingCreatePage = () => {
           count={participantCount}
           onIncrease={handleIncreaseCount}
           onDecrease={handleDecreaseCount}
+          min={minParticipantCount}
         />
         <RepresentativeList
           participants={participants}
